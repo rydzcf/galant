@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { DesktopNav } from "./DesktopNav";
-import { MobileNav } from "./MobileNav";
+import { DesktopNav } from "@/components/DesktopNav";
+import { MobileNav } from "@/components/MobileNav";
 import messagesPl from "@/messages/pl.json";
 import messagesEn from "@/messages/en.json";
-import { EmercoLogo } from "./EmercoLogo";
-import { GalantLogo } from "./GalantLogo";
+import { EmercoLogo } from "@/components/EmercoLogo";
+import { GalantLogo } from "@/components/GalantLogo";
 
 export function Header({ lang }: { lang: 'pl' | 'en' }) {
   const [isScrolled, setIsScrolled] = useState(false);
