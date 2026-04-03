@@ -2,13 +2,12 @@
 # OPIS DZIAŁANIA FLAGI --force:
 # 
 # 1. PLIK DANYCH (blog.json): 
-#    - Tryb Standard: Pobiera blog.json z FTP, aby 'npm run build' użył aktualnych danych.
-#    - Tryb --force: Ignoruje dane na FTP. Używa pliku blog.json znajdującego się w REPOZYTORIUM.
+#    - Tryb Standard: Pobiera blog.json z FTP do src/data/, aby 'npm run build' użył świeżych danych.
+#    - Tryb --force: Ignoruje dane na FTP. Używa pliku blog.json znajdującego się w REPO (src/data/).
 # 
 # 2. ZDJĘCIA I STRUKTURA (rsync):
 #    - Tryb Standard: Chroni foldery /news/, /images/news/, /images/products/ oraz /images/blog/. 
-#      Pliki dodane tam ręcznie na FTP NIE zostaną usunięte.
-#    - Tryb --force: USUWA z FTP wszystko, czego nie ma w repozytorium (nadpisuje foldery zdjęć).
+#    - Tryb --force: Nadpisuje wszystko na FTP zgodnie z zawartością repozytorium.
 # ############################################################################################
 
 name: Deploy to galant.emer.co
@@ -51,34 +50,32 @@ jobs:
     - name: Prepare Data & Backup
       id: prep
       run: |
-        mkdir -p data
-        
-        # 1. Sprawdź czy plik w ogóle jest w repozytorium
-        if [ ! -f "data/blog.json" ]; then
-          echo "!!! BŁĄD: Plik data/blog.json nie istnieje w repozytorium !!!"
+        # 1. Weryfikacja istnienia pliku w poprawnej ścieżce src/data/
+        if [ ! -f "src/data/blog.json" ]; then
+          echo "!!! BŁĄD: Plik src/data/blog.json nie istnieje w repozytorium !!!"
           exit 1
         fi
 
-        # 2. Utwórz kopię roboczą przed jakimikolwiek operacjami builda
-        cp data/blog.json ./blog_to_deploy.json
-        echo "Utworzono kopię roboczą blog_to_deploy.json"
+        # 2. Utwórz kopię roboczą do późniejszej wysyłki przez SCP
+        cp src/data/blog.json ./blog_to_deploy.json
 
         if [ "${{ env.IS_FORCE }}" == "true" ]; then
-          echo "TRYB FORCE: Używam danych z repozytorium."
+          echo "TRYB FORCE: Używam danych bezpośrednio z repo (src/data/)."
           echo "should_build=true" >> $GITHUB_OUTPUT
         else
-          echo "TRYB STANDARD: Próba synchronizacji z FTP"
-          # Próbujemy pobrać plik z serwera do tymczasowej lokalizacji
+          echo "TRYB STANDARD: Synchronizacja z FTP"
+          # Próba pobrania aktualnego pliku z serwera
           if scp -P ${{ env.SSH_PORT }} ${{ env.SSH_USER }}@${{ env.SSH_HOST }}:${{ env.APP_PATH }}/data/blog.json ./ftp_blog.json; then
-            # Jeśli się udało, nadpisujemy lokalne dane do builda i kopię do wysyłki
-            cp ./ftp_blog.json data/blog.json
+            # Nadpisujemy plik w src/data/, aby build Next.js go uwzględnił
+            cp ./ftp_blog.json src/data/blog.json
+            # Aktualizujemy kopię do końcowej wysyłki
             cp ./ftp_blog.json ./blog_to_deploy.json
-            echo "Pomyślnie zsynchronizowano z danymi z FTP."
+            echo "Pobrano i zastosowano blog.json z FTP."
           else
-            echo "Nie znaleziono pliku na FTP, używam wersji z repozytorium."
+            echo "Brak pliku na FTP, używam wersji lokalnej z repo."
           fi
 
-          NEW_HASH=$(md5sum data/blog.json | awk '{print $1}')
+          NEW_HASH=$(md5sum src/data/blog.json | awk '{print $1}')
           OLD_HASH=$(ssh -p ${{ env.SSH_PORT }} ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "cat ${{ env.APP_PATH }}/checksum.txt" || echo "none")
           
           if [ "$NEW_HASH" != "$OLD_HASH" ] || [ "${{ github.event_name }}" == "push" ]; then
@@ -96,28 +93,22 @@ jobs:
     - name: Final Deploy (Rsync & SCP)
       if: steps.prep.outputs.should_build == 'true'
       run: |
-        # Folder data/ jest wykluczony z rsync
+        # Wykluczamy folder data/ z rsync (leci osobno przez SCP)
         EXCLUDES="--exclude='data/'"
         
         if [ "${{ env.IS_FORCE }}" != "true" ]; then
-          echo "STATUS: Ochrona zdjęć i newsów aktywna."
+          echo "STATUS: Ochrona folderów zdjęć aktywna."
           EXCLUDES="$EXCLUDES --exclude='news/' --exclude='images/news/' --exclude='images/products/' --exclude='images/blog/'"
         else
-          echo "STATUS: Tryb Force - pełne nadpisywanie FTP (oprócz folderu data)."
+          echo "STATUS: Tryb Force - czyszczenie i nadpisywanie FTP."
         fi
 
-        # 1. RSYNC (Pliki wygenerowane)
+        # 1. RSYNC plików strony
         rsync -avzc --delete -e "ssh -p ${{ env.SSH_PORT }}" $EXCLUDES out/ ${{ env.SSH_USER }}@${{ env.SSH_HOST }}:${{ env.APP_PATH }}/
 
-        # 2. SCP (Plik danych) - Wysyłamy plik przygotowany w kroku Prepare
+        # 2. SCP pliku blog.json (zawsze do folderu /data/ na serwerze)
         ssh -p ${{ env.SSH_PORT }} ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "mkdir -p ${{ env.APP_PATH }}/data"
-        
-        if [ -f "./blog_to_deploy.json" ]; then
-          scp -P ${{ env.SSH_PORT }} ./blog_to_deploy.json ${{ env.SSH_USER }}@${{ env.SSH_HOST }}:${{ env.APP_PATH }}/data/blog.json
-        else
-          echo "BŁĄD KRYTYCZNY: Plik ./blog_to_deploy.json zaginął przed wysyłką!"
-          exit 1
-        fi
+        scp -P ${{ env.SSH_PORT }} ./blog_to_deploy.json ${{ env.SSH_USER }}@${{ env.SSH_HOST }}:${{ env.APP_PATH }}/data/blog.json
 
         # 3. Suma kontrolna
         if [ "${{ env.IS_FORCE }}" == "true" ]; then
