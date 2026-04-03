@@ -22,8 +22,6 @@ on:
         description: 'Zaznacz, aby wymusić nadpisanie danych (--force)'
         type: boolean
         default: false
-  schedule:
-    - cron: '0 0 * * *'
 
 concurrency:
   group: deploy-group
@@ -53,23 +51,31 @@ jobs:
     - name: Prepare Data & Backup
       id: prep
       run: |
-        mkdir -p ftp_backup
         mkdir -p data
         
-        # Tworzymy kopię bezpieczeństwa pliku z repozytorium (na wypadek gdyby build go usunął)
-        cp data/blog.json ./blog_to_deploy.json || echo "Brak pliku w repo"
+        # 1. Sprawdź czy plik w ogóle jest w repozytorium
+        if [ ! -f "data/blog.json" ]; then
+          echo "!!! BŁĄD: Plik data/blog.json nie istnieje w repozytorium !!!"
+          exit 1
+        fi
+
+        # 2. Utwórz kopię roboczą przed jakimikolwiek operacjami builda
+        cp data/blog.json ./blog_to_deploy.json
+        echo "Utworzono kopię roboczą blog_to_deploy.json"
 
         if [ "${{ env.IS_FORCE }}" == "true" ]; then
-          echo "TRYB FORCE AKTYWNY: Build użyje pliku blog.json z repozytorium."
+          echo "TRYB FORCE: Używam danych z repozytorium."
           echo "should_build=true" >> $GITHUB_OUTPUT
         else
-          echo "TRYB STANDARD: Próba pobrania blog.json z FTP"
+          echo "TRYB STANDARD: Próba synchronizacji z FTP"
+          # Próbujemy pobrać plik z serwera do tymczasowej lokalizacji
           if scp -P ${{ env.SSH_PORT }} ${{ env.SSH_USER }}@${{ env.SSH_HOST }}:${{ env.APP_PATH }}/data/blog.json ./ftp_blog.json; then
+            # Jeśli się udało, nadpisujemy lokalne dane do builda i kopię do wysyłki
             cp ./ftp_blog.json data/blog.json
             cp ./ftp_blog.json ./blog_to_deploy.json
-            echo "Zastosowano dane z FTP."
+            echo "Pomyślnie zsynchronizowano z danymi z FTP."
           else
-            echo "FTP nie zawiera pliku, pozostaję przy wersji z repo."
+            echo "Nie znaleziono pliku na FTP, używam wersji z repozytorium."
           fi
 
           NEW_HASH=$(md5sum data/blog.json | awk '{print $1}')
@@ -90,24 +96,30 @@ jobs:
     - name: Final Deploy (Rsync & SCP)
       if: steps.prep.outputs.should_build == 'true'
       run: |
-        # Podstawowe wykluczenie (folder data obsługujemy osobno przez SCP)
+        # Folder data/ jest wykluczony z rsync
         EXCLUDES="--exclude='data/'"
         
         if [ "${{ env.IS_FORCE }}" != "true" ]; then
-          echo "STATUS: Ochrona zdjęć aktywna."
+          echo "STATUS: Ochrona zdjęć i newsów aktywna."
           EXCLUDES="$EXCLUDES --exclude='news/' --exclude='images/news/' --exclude='images/products/' --exclude='images/blog/'"
         else
-          echo "STATUS: Tryb Force - nadpisywanie wszystkich katalogów."
+          echo "STATUS: Tryb Force - pełne nadpisywanie FTP (oprócz folderu data)."
         fi
 
-        # 1. Rsync - synchronizacja plików wygenerowanych w 'out/'
+        # 1. RSYNC (Pliki wygenerowane)
         rsync -avzc --delete -e "ssh -p ${{ env.SSH_PORT }}" $EXCLUDES out/ ${{ env.SSH_USER }}@${{ env.SSH_HOST }}:${{ env.APP_PATH }}/
 
-        # 2. SCP - wysyłka pliku blog.json (używamy kopii, żeby uniknąć błędu braku pliku)
+        # 2. SCP (Plik danych) - Wysyłamy plik przygotowany w kroku Prepare
         ssh -p ${{ env.SSH_PORT }} ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "mkdir -p ${{ env.APP_PATH }}/data"
-        scp -P ${{ env.SSH_PORT }} ./blog_to_deploy.json ${{ env.SSH_USER }}@${{ env.SSH_HOST }}:${{ env.APP_PATH }}/data/blog.json
+        
+        if [ -f "./blog_to_deploy.json" ]; then
+          scp -P ${{ env.SSH_PORT }} ./blog_to_deploy.json ${{ env.SSH_USER }}@${{ env.SSH_HOST }}:${{ env.APP_PATH }}/data/blog.json
+        else
+          echo "BŁĄD KRYTYCZNY: Plik ./blog_to_deploy.json zaginął przed wysyłką!"
+          exit 1
+        fi
 
-        # 3. Suma kontrolna dla przyszłych porównań
+        # 3. Suma kontrolna
         if [ "${{ env.IS_FORCE }}" == "true" ]; then
           md5sum ./blog_to_deploy.json | awk '{print $1}' > checksum.txt
         else
