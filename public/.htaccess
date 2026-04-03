@@ -1,0 +1,17 @@
+Options -Indexes
+RewriteEngine On
+DirectoryIndex index.html
+
+# Jeśli istnieje fizyczny plik, serwuj go
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+# Jeśli nie ma slasha na końcu i to nie jest plik, dodaj slash (SEO i struktura)
+RewriteCond %{REQUEST_URI} !(\.[a-zA-Z0-9]{1,5}|/)$
+RewriteRule ^(.*)$ /$1/ [R=301,L]
+
+# Jeśli pod daną ścieżką istnieje index.html, serwuj go
+RewriteCond %{DOCUMENT_ROOT}/$1/index.html -f
+RewriteRule ^(.*)/?$ $1/index.html [L]
+
+ErrorDocument 404 /404.html
