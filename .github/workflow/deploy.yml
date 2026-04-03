@@ -1,0 +1,109 @@
+# ################################################################
+# !!! UWAGA / WARNING !!!
+# 
+# UŻYCIE FLAGI --force (W INPUT LUB W COMMICIE) POWODUJE:
+# 1. NADPISANIE PLIKU blog.json W /data/ TYM Z REPOZYTORIUM.
+# 2. NADPISANIE KATALOGÓW ZE ZDJĘCIAMI: /news/, /images/news/, /images/products/.
+# 3. WSZYSTKIE ZMIANY WPROWADZONE RĘCZNIE PRZEZ UŻYTKOWNIKA NA FTP
+#    W TYCH KATALOGACH ZOSTANĄ BEZPOWROTNIE USUNIĘTE!
+#
+# W TRYBIE STANDARDOWYM (BEZ FLAGI --force) DANE NA FTP SĄ BEZPIECZNE.
+# ################################################################
+
+name: Deploy to galant.emer.co
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      force_deploy:
+        description: 'Zaznacz, aby wymusić nadpisanie danych (--force)'
+        type: boolean
+        default: false
+  schedule:
+    - cron: '0 0 * * *'
+
+concurrency:
+  group: deploy-group
+  cancel-in-progress: true
+
+env:
+  SSH_HOST: "185.135.91.50"
+  SSH_PORT: "40022"
+  SSH_USER: "serwer333502"
+  APP_PATH: "public_html/galant.emer.co"
+  # Sprawdza czy input jest true LUB czy wiadomość commita zawiera dokładnie "--force"
+  IS_FORCE: ${{ github.event.inputs.force_deploy == 'true' || contains(github.event.head_commit.message, '--force') }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up SSH Key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SERWER333502_AUTO_DEPLOY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -p ${{ env.SSH_PORT }} ${{ env.SSH_HOST }} >> ~/.ssh/known_hosts
+
+    - name: Prepare Data & Logic
+      id: prep
+      run: |
+        mkdir -p ftp_backup
+        ssh -p ${{ env.SSH_PORT }} ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "mkdir -p ${{ env.APP_PATH }}/data"
+
+        if [ "${{ env.IS_FORCE }}" == "true" ]; then
+          echo "TRYB FORCE AKTYWNY: Build użyje pliku blog.json z repozytorium."
+          echo "should_build=true" >> $GITHUB_OUTPUT
+        else
+          echo "TRYB STANDARD: Pobieram aktualny blog.json z FTP"
+          scp -P ${{ env.SSH_PORT }} ${{ env.SSH_USER }}@${{ env.SSH_HOST }}:${{ env.APP_PATH }}/data/blog.json ftp_backup/ || echo "FTP pusty"
+          
+          # Nadpisujemy lokalny plik w data/ tym z FTP, aby 'npm run build' go użył
+          if [ -f ftp_backup/blog.json ]; then
+            cp ftp_backup/blog.json data/blog.json
+          fi
+
+          NEW_HASH=$(md5sum data/blog.json | awk '{print $1}')
+          OLD_HASH=$(ssh -p ${{ env.SSH_PORT }} ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "cat ${{ env.APP_PATH }}/checksum.txt" || echo "none")
+          
+          if [ "$NEW_HASH" != "$OLD_HASH" ] || [ "${{ github.event_name }}" == "push" ]; then
+            echo "should_build=true" >> $GITHUB_OUTPUT
+            echo "hash=$NEW_HASH" >> $GITHUB_ENV
+          fi
+        fi
+
+    - name: Build Website
+      if: steps.prep.outputs.should_build == 'true'
+      run: |
+        npm install
+        npm run build
+
+    - name: Final Deploy (Rsync & SCP)
+      if: steps.prep.outputs.should_build == 'true'
+      run: |
+        EXCLUDES="--exclude='data/'"
+        if [ "${{ env.IS_FORCE }}" != "true" ]; then
+          # Chronimy foldery zdjęć na FTP tylko gdy NIE ma force
+          EXCLUDES="$EXCLUDES --exclude='news/' --exclude='images/news/' --exclude='images/products/'"
+        fi
+
+        # 1. Rsync (Katalog data/ zawsze wykluczony z rsync)
+        rsync -avzc --delete -e "ssh -p ${{ env.SSH_PORT }}" $EXCLUDES out/ ${{ env.SSH_USER }}@${{ env.SSH_HOST }}:${{ env.APP_PATH }}/
+
+        # 2. Obsługa pliku blog.json
+        if [ "${{ env.IS_FORCE }}" == "true" ]; then
+          echo "WYSYŁANIE DANYCH Z REPO (TRYB --force)"
+          scp -P ${{ env.SSH_PORT }} data/blog.json ${{ env.SSH_USER }}@${{ env.SSH_HOST }}:${{ env.APP_PATH }}/data/
+          md5sum data/blog.json | awk '{print $1}' > checksum.txt
+        else
+          echo "ZACHOWYWANIE DANYCH Z FTP (TRYB STANDARD)"
+          echo "${{ env.hash }}" > checksum.txt
+        fi
+        
+        # 3. Wysłanie checksumy
+        scp -P ${{ env.SSH_PORT }} checksum.txt ${{ env.SSH_USER }}@${{ env.SSH_HOST }}:${{ env.APP_PATH }}/checksum.txt
