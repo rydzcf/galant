@@ -40,7 +40,8 @@
 - Use placeholders from Unsplash if images are missing.
 
 ## Final Build Verification
-- Ensure `next.config.js` is set to `output: 'export'`.
+- Ensure `next.config.ts` is set to `output: 'export'`.
+- **CRITICAL:** Always include `trailingSlash: true` in `next.config.ts` alongside `output: 'export'`! This guarantees that paths generate as `/route/index.html` instead of `/route.html`, avoiding `403 Forbidden` errors on standard web servers (Apache/Nginx).
 - Check if all Client Components avoid Node.js-only APIs.
 - Confirm: "Is the mobile menu locking the scroll? Is the header shrinking on desktop?"
 
