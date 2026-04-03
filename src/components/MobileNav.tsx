@@ -8,16 +8,7 @@ import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetClose } from "@/com
 export function MobileNav({ messages, lang }: { messages: any, lang: 'pl' | 'en' }) {
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, [open]);
+
 
   const links = [
     { href: `/${lang}#about`, label: messages.nav.about },

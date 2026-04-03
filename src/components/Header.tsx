@@ -34,11 +34,11 @@ export function Header({ lang }: { lang: 'pl' | 'en' }) {
             )}
           </span>
         </Link>
-        
+
         <div className="hidden md:block">
           <DesktopNav messages={messages} lang={lang} />
         </div>
-        
+
         <div className="md:hidden">
           <MobileNav messages={messages} lang={lang} />
         </div>
