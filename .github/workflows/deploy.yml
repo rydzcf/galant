@@ -1,14 +1,15 @@
-# ################################################################
-# !!! UWAGA / WARNING !!!
+# ############################################################################################
+# OPIS DZIAŁANIA FLAGI --force:
 # 
-# UŻYCIE FLAGI --force (W INPUT LUB W COMMICIE) POWODUJE:
-# 1. NADPISANIE PLIKU blog.json W /data/ TYM Z REPOZYTORIUM.
-# 2. NADPISANIE KATALOGÓW ZE ZDJĘCIAMI: /news/, /images/news/, /images/products/.
-# 3. WSZYSTKIE ZMIANY WPROWADZONE RĘCZNIE PRZEZ UŻYTKOWNIKA NA FTP
-#    W TYCH KATALOGACH ZOSTANĄ BEZPOWROTNIE USUNIĘTE!
-#
-# W TRYBIE STANDARDOWYM (BEZ FLAGI --force) DANE NA FTP SĄ BEZPIECZNE.
-# ################################################################
+# 1. PLIK DANYCH (blog.json): 
+#    - Tryb Standard: Pobiera blog.json z FTP, aby 'npm run build' użył aktualnych danych.
+#    - Tryb --force: Ignoruje dane na FTP. Używa pliku blog.json znajdującego się w REPOZYTORIUM.
+# 
+# 2. ZDJĘCIA I STRUKTURA (rsync):
+#    - Tryb Standard: Chroni foldery /news/, /images/news/, /images/products/ oraz /images/blog/. 
+#      Pliki dodane tam ręcznie na FTP NIE zostaną usunięte.
+#    - Tryb --force: USUWA z FTP wszystko, czego nie ma w repozytorium (nadpisuje foldery zdjęć).
+# ############################################################################################
 
 name: Deploy to galant.emer.co
 
@@ -33,7 +34,6 @@ env:
   SSH_PORT: "40022"
   SSH_USER: "serwer333502"
   APP_PATH: "public_html/galant.emer.co"
-  # Sprawdza czy input jest true LUB czy wiadomość commita zawiera dokładnie "--force"
   IS_FORCE: ${{ github.event.inputs.force_deploy == 'true' || contains(github.event.head_commit.message, '--force') }}
 
 jobs:
@@ -50,22 +50,26 @@ jobs:
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -p ${{ env.SSH_PORT }} ${{ env.SSH_HOST }} >> ~/.ssh/known_hosts
 
-    - name: Prepare Data & Logic
+    - name: Prepare Data & Backup
       id: prep
       run: |
         mkdir -p ftp_backup
-        ssh -p ${{ env.SSH_PORT }} ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "mkdir -p ${{ env.APP_PATH }}/data"
+        mkdir -p data
+        
+        # Tworzymy kopię bezpieczeństwa pliku z repozytorium (na wypadek gdyby build go usunął)
+        cp data/blog.json ./blog_to_deploy.json || echo "Brak pliku w repo"
 
         if [ "${{ env.IS_FORCE }}" == "true" ]; then
           echo "TRYB FORCE AKTYWNY: Build użyje pliku blog.json z repozytorium."
           echo "should_build=true" >> $GITHUB_OUTPUT
         else
-          echo "TRYB STANDARD: Pobieram aktualny blog.json z FTP"
-          scp -P ${{ env.SSH_PORT }} ${{ env.SSH_USER }}@${{ env.SSH_HOST }}:${{ env.APP_PATH }}/data/blog.json ftp_backup/ || echo "FTP pusty"
-          
-          # Nadpisujemy lokalny plik w data/ tym z FTP, aby 'npm run build' go użył
-          if [ -f ftp_backup/blog.json ]; then
-            cp ftp_backup/blog.json data/blog.json
+          echo "TRYB STANDARD: Próba pobrania blog.json z FTP"
+          if scp -P ${{ env.SSH_PORT }} ${{ env.SSH_USER }}@${{ env.SSH_HOST }}:${{ env.APP_PATH }}/data/blog.json ./ftp_blog.json; then
+            cp ./ftp_blog.json data/blog.json
+            cp ./ftp_blog.json ./blog_to_deploy.json
+            echo "Zastosowano dane z FTP."
+          else
+            echo "FTP nie zawiera pliku, pozostaję przy wersji z repo."
           fi
 
           NEW_HASH=$(md5sum data/blog.json | awk '{print $1}')
@@ -86,24 +90,28 @@ jobs:
     - name: Final Deploy (Rsync & SCP)
       if: steps.prep.outputs.should_build == 'true'
       run: |
+        # Podstawowe wykluczenie (folder data obsługujemy osobno przez SCP)
         EXCLUDES="--exclude='data/'"
+        
         if [ "${{ env.IS_FORCE }}" != "true" ]; then
-          # Chronimy foldery zdjęć na FTP tylko gdy NIE ma force
-          EXCLUDES="$EXCLUDES --exclude='news/' --exclude='images/news/' --exclude='images/products/'"
+          echo "STATUS: Ochrona zdjęć aktywna."
+          EXCLUDES="$EXCLUDES --exclude='news/' --exclude='images/news/' --exclude='images/products/' --exclude='images/blog/'"
+        else
+          echo "STATUS: Tryb Force - nadpisywanie wszystkich katalogów."
         fi
 
-        # 1. Rsync (Katalog data/ zawsze wykluczony z rsync)
+        # 1. Rsync - synchronizacja plików wygenerowanych w 'out/'
         rsync -avzc --delete -e "ssh -p ${{ env.SSH_PORT }}" $EXCLUDES out/ ${{ env.SSH_USER }}@${{ env.SSH_HOST }}:${{ env.APP_PATH }}/
 
-        # 2. Obsługa pliku blog.json
+        # 2. SCP - wysyłka pliku blog.json (używamy kopii, żeby uniknąć błędu braku pliku)
+        ssh -p ${{ env.SSH_PORT }} ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "mkdir -p ${{ env.APP_PATH }}/data"
+        scp -P ${{ env.SSH_PORT }} ./blog_to_deploy.json ${{ env.SSH_USER }}@${{ env.SSH_HOST }}:${{ env.APP_PATH }}/data/blog.json
+
+        # 3. Suma kontrolna dla przyszłych porównań
         if [ "${{ env.IS_FORCE }}" == "true" ]; then
-          echo "WYSYŁANIE DANYCH Z REPO (TRYB --force)"
-          scp -P ${{ env.SSH_PORT }} data/blog.json ${{ env.SSH_USER }}@${{ env.SSH_HOST }}:${{ env.APP_PATH }}/data/
-          md5sum data/blog.json | awk '{print $1}' > checksum.txt
+          md5sum ./blog_to_deploy.json | awk '{print $1}' > checksum.txt
         else
-          echo "ZACHOWYWANIE DANYCH Z FTP (TRYB STANDARD)"
           echo "${{ env.hash }}" > checksum.txt
         fi
         
-        # 3. Wysłanie checksumy
         scp -P ${{ env.SSH_PORT }} checksum.txt ${{ env.SSH_USER }}@${{ env.SSH_HOST }}:${{ env.APP_PATH }}/checksum.txt
