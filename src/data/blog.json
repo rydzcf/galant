@@ -3,7 +3,7 @@
     {
       "id": "1",
       "slug": "czym-jest-trt",
-      "image": "/images/suplementy.webp",
+      "image": "/images/blog/suplementy.webp",
       "locales": {
         "pl": {
           "title": "Czym jest TRT?",
@@ -20,7 +20,7 @@
     {
       "id": "2",
       "slug": "zdrowa-dieta",
-      "image": "/images/warzywa.webp",
+      "image": "/images/blog/warzywa.webp",
       "locales": {
         "pl": {
           "title": "Zdrowa dieta a poziom hormonów",
