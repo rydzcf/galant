@@ -1,0 +1,16 @@
+{
+  "nav": {
+    "about": "O Mnie",
+    "offer": "Oferta",
+    "blog": "Blog",
+    "contact": "Kontakt"
+  },
+  "hero": {
+    "title": "Medycyna Personalizowana",
+    "subtitle": "lek. Adam Galant",
+    "description": "Specjalizuję się w Terapii Hormonalnej Zastępczej (TRT) testosteronem. Skuteczne leczenie poprawiające jakość życia mężczyzn."
+  },
+  "footer": {
+    "rights": "wszelkie prawa zastrzeżone."
+  }
+}

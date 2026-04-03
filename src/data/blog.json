@@ -1,0 +1,38 @@
+{
+  "posts": [
+    {
+      "id": "1",
+      "slug": "czym-jest-trt",
+      "image": "/images/suplementy.webp",
+      "locales": {
+        "pl": {
+          "title": "Czym jest TRT?",
+          "summary": "Terapia zastępcza testosteronem (TRT) jest skutecznym rozwiązaniem dla mężczyzn z niedoborem tego hormonu. Dowiedz się, czy jest dla Ciebie.",
+          "content": "Pełna treść postu o TRT..."
+        },
+        "en": {
+          "title": "What is TRT?",
+          "summary": "Testosterone Replacement Therapy (TRT) is an effective solution for men with hormone deficiency. Find out if it's for you.",
+          "content": "Full content of the TRT post..."
+        }
+      }
+    },
+    {
+      "id": "2",
+      "slug": "zdrowa-dieta",
+      "image": "/images/warzywa.webp",
+      "locales": {
+        "pl": {
+          "title": "Zdrowa dieta a poziom hormonów",
+          "summary": "Jak jedzenie wpływa na gospodarkę hormonalną? Przewodnik po zdrowym odżywianiu.",
+          "content": "Treść o diecie i hormonach..."
+        },
+        "en": {
+          "title": "Healthy Diet and Hormone Levels",
+          "summary": "How does food impact your hormonal balance? A guide to healthy eating.",
+          "content": "Content about diet and hormones..."
+        }
+      }
+    }
+  ]
+}

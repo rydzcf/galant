@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 294 277" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;">
+    <g transform="matrix(1,0,0,1,-54.7154,-94)">
+        <g transform="matrix(1,0,0,1,200,180)">
+            <path d="M0,-80L70,-40L70,40L0,80L-70,40L-70,-40L0,-80Z" style="fill:none;fill-rule:nonzero;stroke:rgb(74,82,77);stroke-width:12px;"/>
+            <path d="M-35,-20L-35,60M0,-40L0,80M35,-20L35,60" style="fill:none;fill-rule:nonzero;stroke:rgb(74,82,77);stroke-width:12px;stroke-linecap:round;stroke-linejoin:miter;"/>
+            <g transform="matrix(1,0,0,1,0.31,140)">
+                <text x="-149.47px" y="0px" style="font-family:'Helvetica-Bold', 'Helvetica';font-weight:700;font-size:62px;fill:rgb(74,82,77);">m<tspan x="-94.962px -61.1px -23.848px 10.013px 43.875px 77.736px 114.988px " y="0px 0px 0px 0px 0px 0px 0px ">edycyna</tspan></text>
+            </g>
+            <g transform="matrix(1,0,0,1,-1.12,185)">
+                <text x="-79.355px" y="0px" style="font-family:'Helvetica';font-size:28px;fill:rgb(74,82,77);">p<tspan x="-61.543px -43.731px -32.167px -15.927px 1.886px 19.698px 37.51px 45.971px 63.783px " y="0px 0px 0px 0px 0px 0px 0px 0px 0px ">ersonalna</tspan></text>
+            </g>
+        </g>
+    </g>
+</svg>
