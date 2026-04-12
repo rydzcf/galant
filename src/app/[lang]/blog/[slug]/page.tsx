@@ -5,6 +5,7 @@ import fs from "fs";
 import path from "path";
 import { Reveal } from "@/components/Reveal";
 import { ArrowLeft } from "lucide-react";
+import { CtaSection } from "@/components/CtaSection";
 
 type BlogPostProps = {
   params: Promise<{ lang: 'pl' | 'en'; slug: string }>;
@@ -57,7 +58,7 @@ export default async function BlogPost(props: BlogPostProps) {
         
         <div className="container mx-auto px-4 z-10">
           <Reveal>
-            <div className="max-w-3xl mx-auto">
+            <div className="max-w-5xl mx-auto">
               <Link href={`/${lang}/#blog`} className="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-medium mb-8 transition-colors">
                 <ArrowLeft className="w-4 h-4" />
                 {lang === 'pl' ? "Wróć do bloga" : "Back to blog"}
@@ -77,7 +78,7 @@ export default async function BlogPost(props: BlogPostProps) {
       <section className="w-full py-16 md:py-24">
         <div className="container mx-auto px-4">
           <Reveal delay={0.2}>
-            <div className="max-w-3xl mx-auto space-y-6 text-lg md:text-xl text-muted-foreground leading-relaxed">
+            <div className="max-w-5xl mx-auto space-y-6 text-lg md:text-xl text-muted-foreground leading-relaxed">
               {/* In a real scenario, you'd probably use a Markdown parser or dangerous HTML here. 
                   Since we have plain text in JSON, we just render paragraphs separated by newlines. */}
               {localeData.content.split('\n').map((paragraph: string, i: number) => (
@@ -87,6 +88,9 @@ export default async function BlogPost(props: BlogPostProps) {
           </Reveal>
         </div>
       </section>
+
+      {/* CTA Section */}
+      <CtaSection lang={lang} />
     </div>
   );
 }
