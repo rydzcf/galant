@@ -8,6 +8,7 @@ export function DesktopNav({ messages, lang }: { messages: any, lang: 'pl' | 'en
     { href: `/${lang}#about`, label: messages.nav.about },
     { href: `/${lang}#offer`, label: messages.nav.offer },
     { href: `/${lang}#blog`, label: messages.nav.blog },
+    { href: `/${lang}#prices`, label: messages.nav.prices },
     { href: `/${lang}#contact`, label: messages.nav.contact },
   ];
 
