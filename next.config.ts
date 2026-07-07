@@ -4,7 +4,10 @@ const nextConfig: NextConfig = {
   output: 'export',
   trailingSlash: true,
   images: {
-    unoptimized: true
+    unoptimized: true,
+     remotePatterns: [
+    { protocol: "http", hostname: "serwer38987.lh.pl" },
+  ],
   }
 };
 

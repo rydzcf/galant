@@ -127,4 +127,35 @@
   html {
     @apply font-sans;
   }
+  article p {
+    @apply mb-4;
+  }
+
+  article p:last-child {
+    @apply mb-0;
+  }
+
+  article h1 {
+    @apply text-3xl md:text-4xl font-semibold leading-tight mb-4 text-primary;
+  }
+
+  article h3 {
+    @apply text-xl md:text-2xl leading-tight mb-4 mt-8 text-primary;
+  }
+
+ article ul {
+  @apply mb-4 list-disc ps-5;
+}
+
+article li {
+  @apply mb-2 ms-4 marker:text-primary;
+}
+
+article li:last-child {
+  @apply mb-0;
+}
+
+  article strong {
+    @apply font-semibold;
+  }
 }

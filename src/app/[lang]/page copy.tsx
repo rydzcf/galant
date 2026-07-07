@@ -3,51 +3,26 @@ import Image from "next/image";
 import Link from "next/link";
 import messagesPl from "@/messages/pl.json";
 import messagesEn from "@/messages/en.json";
+import fs from "fs";
+import path from "path";
 import { MapPin, Clock, Building } from "lucide-react";
 
 type PageProps = {
   params: Promise<{ lang: 'pl' | 'en' }>;
 };
 
-type BlogPost = {
-  id: string;
-  slug: string;
-  image: string;
-  locales: {
-    pl?: { title: string; summary: string };
-    en?: { title: string; summary: string };
-  };
-};
-
-async function getBlogPosts(): Promise<BlogPost[]> {
-  try {
-    const res = await fetch("http://serwer38987.lh.pl/upload/localhost/data.json", {
-      cache: "no-store", // wymuś świeże dane przy każdym żądaniu
-    });
-
-    if (!res.ok) {
-      console.error(`Failed to fetch blog data: ${res.status}`);
-      return [];
-    }
-
-    const data = await res.json();
-    // API zwraca tablicę postów bezpośrednio, nie { posts: [...] }
-    return Array.isArray(data) ? data : [];
-  } catch (error) {
-    console.error("Error fetching blog data:", error);
-    return [];
-  }
-}
-
 export default async function Home(props: PageProps) {
   const params = await props.params;
   const lang = params.lang;
   const messages = lang === 'pl' ? messagesPl : messagesEn;
 
-  const posts = await getBlogPosts();
+  // Read local blog data
+  const blogDataPath = path.join(process.cwd(), 'src/data/blog.json');
+  const blogData = JSON.parse(fs.readFileSync(blogDataPath, 'utf8'));
+  const posts = blogData.posts;
 
   return (
-     <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center">
       {/* Hero Section */}
       <section className="w-full min-h-[100dvh] flex flex-col pt-24 md:pt-32 pb-0 bg-background overflow-hidden relative">
         <div className="container mx-auto px-4 z-10 w-full flex-1 flex flex-col justify-center md:justify-start md:flex-row items-stretch">
@@ -198,43 +173,34 @@ export default async function Home(props: PageProps) {
       </section>
 
       {/* Blog Section */}
-     <section id="blog" className="w-full py-32 bg-background">
+      <section id="blog" className="w-full py-32 bg-background">
         <div className="container mx-auto px-4">
           <Reveal>
             <h2 className="text-4xl md:text-5xl font-bold mb-16">{messages.nav.blog}</h2>
           </Reveal>
 
-          {posts.length === 0 ? (
-            <p className="text-muted-foreground">
-              {lang === 'pl' ? "Brak dostępnych wpisów." : "No posts available."}
-            </p>
-          ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {posts.map((post: BlogPost, index: number) => {
-                const localeData = post.locales[lang];
-                if(!localeData) {
-                  return null
-                }
-                return (
-                  <Reveal key={post.id} delay={index * 0.2}>
-                    <Link href={`/${lang}/blog/${post.slug}`} className="group block cursor-pointer">
-                      <div className="overflow-hidden rounded-3xl mb-6 shadow-lg aspect-[4/3] bg-secondary">
-                        <Image
-                          src={post.image}
-                          alt={localeData.title}
-                          width={600}
-                          height={450}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                      </div>
-                      <h3 className="text-2xl font-bold mb-4 group-hover:text-primary transition-colors">{localeData.title}</h3>
-                      <p className="text-muted-foreground line-clamp-3">{localeData.summary}</p>
-                    </Link>
-                  </Reveal>
-                );
-              })}
-            </div>
-          )}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {posts.map((post: any, index: number) => {
+              const localeData = post.locales[lang];
+              return (
+                <Reveal key={post.id} delay={index * 0.2}>
+                  <Link href={`/${lang}/blog/${post.slug}`} className="group block cursor-pointer">
+                    <div className="overflow-hidden rounded-3xl mb-6 shadow-lg aspect-[4/3] bg-secondary">
+                      <Image
+                        src={post.image}
+                        alt={localeData.title}
+                        width={600}
+                        height={450}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    </div>
+                    <h3 className="text-2xl font-bold mb-4 group-hover:text-primary transition-colors">{localeData.title}</h3>
+                    <p className="text-muted-foreground line-clamp-3">{localeData.summary}</p>
+                  </Link>
+                </Reveal>
+              );
+            })}
+          </div>
         </div>
       </section>
 
@@ -296,4 +262,3 @@ export default async function Home(props: PageProps) {
     </div>
   );
 }
-
