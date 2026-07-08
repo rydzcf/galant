@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import { Reveal } from "@/components/Reveal";
 import Image from "next/image";
 import Link from "next/link";
@@ -44,7 +46,11 @@ export default async function Home(props: PageProps) {
   const lang = params.lang;
   const messages = lang === 'pl' ? messagesPl : messagesEn;
 
-  const posts = await getBlogPosts();
+  // Read local blog data
+  const blogDataPath = path.join(process.cwd(), 'src/data/blog.json');
+  const blogData = JSON.parse(fs.readFileSync(blogDataPath, 'utf8'));
+  const posts = blogData.posts;
+  // const posts = await getBlogPosts();
 
   return (
      <div className="flex flex-col items-center">
