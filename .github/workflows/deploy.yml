@@ -28,8 +28,8 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20' # w razie potrzeby zmień na wersję, której używasz lokalnie
-        cache: 'npm'       # automatyczny cache przyspieszy kolejne wdrożenia
+        node-version: '20' 
+        cache: 'npm'       
 
     - name: Set up SSH Key
       run: |
@@ -38,26 +38,29 @@ jobs:
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -p ${{ env.SSH_PORT }} ${{ env.SSH_HOST }} >> ~/.ssh/known_hosts
 
-    # 2. Pobranie danych (muszą być na miejscu przed uruchomieniem buildu)
-    - name: Download Remote Data JSON
-      run: |
-        mkdir -p app/data
-        curl -sL "http://serwer38987.lh.pl/upload/${{ env.APP_NAME }}/data.json" -o "app/data/data.json"
-
-    # 3. Instalacja paczek oraz budowanie aplikacji (export)
+    # 2. Instalacja paczek oraz budowanie aplikacji (export)
+    # [ZMIANA]: Usunięto curl. Next.js użyje pliku app/data/data.json z Twojego repozytorium.
     - name: Install dependencies & Build
       run: |
         npm ci
         npm run build
 
-    # 4. Wysyłka SAMYCH gotowych plików statycznych na serwer
+    # KROK DIAGNOSTYCZNY: Sprawdzamy czy foldery pl/en na pewno się wygenerowały
+    - name: Debug Build Output
+      run: |
+        echo "=== Zawartość folderu out po buildzie ==="
+        if [ -d "./out" ]; then
+          ls -la ./out
+        else
+          echo "BŁĄD: Folder ./out nie istnieje!"
+          ls -la
+        fi
+
+    # 3. Wysyłka SAMYCH gotowych plików statycznych na serwer
     - name: Clean & Deploy via Rsync
       run: |
-        # Upewniamy się, że folder docelowy na serwerze istnieje
         ssh -p ${{ env.SSH_PORT }} ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "mkdir -p public_html/${{ env.APP_NAME }}"
         
-        # Poprawione: Przesyłamy tylko zawartość folderu ./out/ (lub ./dist/ jeśli to Vite/Nuxt)
-        # Ważny jest ukośnik na końcu "out/", aby wgrać zawartość folderu, a nie sam folder
-        rsync -avzc --delete \
+        rsync -avzc --delete --no-vcs-ignores \
           -e "ssh -p ${{ env.SSH_PORT }}" \
           ./out/ ${{ env.SSH_USER }}@${{ env.SSH_HOST }}:public_html/${{ env.APP_NAME }}/
