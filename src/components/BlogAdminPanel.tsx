@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
-import { DevBundlerService } from "next/dist/server/lib/dev-bundler-service";
+import DeployButton from "./DeployButton"
 
 // ============================================================
 // KONFIGURACJA

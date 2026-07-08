@@ -2,7 +2,7 @@ import { executeDeploy } from '@/lib/deploy';
 import React, { useState } from 'react';
 
 
-function DeployButton(token: string, repoUrl: string) {
+export default function DeployButton({token, repoUrl} :{token: string, repoUrl: string}) {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleClick = () => {
