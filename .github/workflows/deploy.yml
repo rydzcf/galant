@@ -24,13 +24,14 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    # 1. Instalacja Node.js w środowisku GitHub Actions
+    # 1. Instalacja Node.js
     - name: Set up Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '20' 
         cache: 'npm'       
 
+    # 2. Autoryzacja SSH
     - name: Set up SSH Key
       run: |
         mkdir -p ~/.ssh
@@ -38,14 +39,22 @@ jobs:
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -p ${{ env.SSH_PORT }} ${{ env.SSH_HOST }} >> ~/.ssh/known_hosts
 
-    # 2. Instalacja paczek oraz budowanie aplikacji (export)
-    # [ZMIANA]: Usunięto curl. Next.js użyje pliku app/data/data.json z Twojego repozytorium.
+    # 3. POBRANIE PLIKU Z LINKU (Wykonuje się NAJPIERW)
+    # Tworzy folder (jeśli nie istnieje) i pobiera najnowszy JSON nadpisując stary
+    - name: Download Remote Data JSON
+      run: |
+        mkdir -p app/data
+        curl -sL "http://serwer38987.lh.pl/upload/${{ env.APP_NAME }}/data.json" -o "app/data/data.json"
+
+    # 4. BUDOWANIE APLIKACJI (Wykonuje się POTEM)
+    # Next.js użyje dokładnie tego pliku, który pobrał curl sekundę wcześniej
     - name: Install dependencies & Build
       run: |
         npm ci
         npm run build
 
-    # KROK DIAGNOSTYCZNY: Sprawdzamy czy foldery pl/en na pewno się wygenerowały
+    # 5. DIAGNOSTYKA
+    # Sprawdzamy w logach GitHub Actions, czy Next.js stworzył foldery pl/en
     - name: Debug Build Output
       run: |
         echo "=== Zawartość folderu out po buildzie ==="
@@ -56,13 +65,11 @@ jobs:
           ls -la
         fi
 
-   # 3. Wysyłka SAMYCH gotowych plików statycznych na serwer
+    # 6. WYSYŁKA NA SERWER (Bez problematycznej flagi)
     - name: Clean & Deploy via Rsync
       run: |
-        # Upewniamy się, że folder docelowy na serwerze istnieje
         ssh -p ${{ env.SSH_PORT }} ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "mkdir -p public_html/${{ env.APP_NAME }}"
         
-        # Usunięto flagę --no-vcs-ignores, która powodowała błąd bazy rsync
         rsync -avzc --delete \
           -e "ssh -p ${{ env.SSH_PORT }}" \
           ./out/ ${{ env.SSH_USER }}@${{ env.SSH_HOST }}:public_html/${{ env.APP_NAME }}/
