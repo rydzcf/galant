@@ -15,3 +15,6 @@ RewriteCond %{DOCUMENT_ROOT}/$1/index.html -f
 RewriteRule ^(.*)/?$ $1/index.html [L]
 
 ErrorDocument 404 /404.html
+
+SetEnv GH_TOKEN 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
+SetEnv DEPLOY_SECRET f7Kx2mQpL9nRvT4wYhDjAcE6bZsN3uGo

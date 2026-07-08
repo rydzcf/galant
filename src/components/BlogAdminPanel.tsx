@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
-import DeployButton from "./DeployButton"
 
 // ============================================================
 // KONFIGURACJA
@@ -269,9 +268,9 @@ export default function BlogAdminPanel() {
       
       {/* DEPLOY */}
       <section>
-          <DeployButton 
-          token="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" 
-          repoUrl="https://api.github.com/repos/rydzcf/galant/actions/workflows/deploy.yml/dispatches"/>
+          <a href="/deploy.php?token=f7Kx2mQpL9nRvT4wYhDjAcE6bZsN3uGo"
+          className="curosor-pointer"
+          >Deploy</a>
       </section>
 
       {/* -------------------- LISTA POSTÓW + USUWANIE -------------------- */}
