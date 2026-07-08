@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+   "predev": "curl -fL \"http://serwer38987.lh.pl/upload/galant.emer.co/data.json\" -o \"src/data/blog.tmp.json\" && mv \"src/data/blog.tmp.json\" \"src/data/blog.json\"",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
