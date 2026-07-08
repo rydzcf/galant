@@ -39,11 +39,17 @@ jobs:
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -p ${{ env.SSH_PORT }} ${{ env.SSH_HOST }} >> ~/.ssh/known_hosts
 
-    # 3. POBRANIE PLIKU Z LINKU (Trafia prosto do src/data/blog.json)
+   # 3. POBRANIE PLIKU Z LINKU (Z ulepszoną diagnostyką błędów)
     - name: Download Remote Data JSON
       run: |
         mkdir -p src/data
-        curl -sL "http://serwer38987.lh.pl/upload/${{ env.APP_NAME }}/data.json" -o "src/data/blog.json"
+        # Flaga -f (fail) przerwie krok, jeśli serwer zwróci błąd HTTP (np. 404)
+        # Usunięto -s, aby widzieć pasek postępu i ewentualny komunikat o błędzie sieci
+        curl -fL "http://serwer38987.lh.pl/upload/${{ env.APP_NAME }}/data.json" -o "src/data/blog.json"
+        
+        echo "=== Sprawdzam, czy plik nie jest pusty i co zawiera ==="
+        ls -la src/data/blog.json
+        head -n 20 src/data/blog.json
 
     # 4. Instalacja paczek oraz budowanie aplikacji (export)
     - name: Install dependencies & Build
