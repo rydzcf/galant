@@ -60,11 +60,11 @@ jobs:
         echo "=== Zawartość folderu out po buildzie ==="
         ls -la ./out
 
-    # 6. Wysyłka na serwer FTP
+   # 6. Wysyłka na serwer FTP (Z wykluczeniem .htaccess)
     - name: Clean & Deploy via Rsync
       run: |
         ssh -p ${{ env.SSH_PORT }} ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "mkdir -p public_html/${{ env.APP_NAME }}"
         
-        rsync -avzc --delete \
+        rsync -avzc --delete --exclude='.htaccess' \
           -e "ssh -p ${{ env.SSH_PORT }}" \
           ./out/ ${{ env.SSH_USER }}@${{ env.SSH_HOST }}:public_html/${{ env.APP_NAME }}/
