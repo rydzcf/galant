@@ -16,7 +16,6 @@ env:
   SSH_HOST: "185.135.91.50"
   SSH_PORT: "40022"
   SSH_USER: "serwer333502"
-  APP_PATH: "public_html/${{ github.env.APP_NAME || 'galant.emer.co' }}"
 
 jobs:
   deploy:
@@ -34,17 +33,15 @@ jobs:
 
     - name: Download Remote Data JSON
       run: |
-        # Tworzenie struktury folderów wewnątrz repozytorium
         mkdir -p app/data
-        # Dynamiczne pobieranie pliku z użyciem zmiennej APP_NAME
         curl -sL "http://serwer38987.lh.pl/upload/${{ env.APP_NAME }}/data.json" -o "app/data/data.json"
 
     - name: Clean & Deploy via Rsync
       run: |
-        # Upewniamy się, że folder docelowy na serwerze istnieje
-        ssh -p ${{ env.SSH_PORT }} ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "mkdir -p ${{ env.APP_PATH }}"
+        # Upewniamy się, że folder docelowy na serwerze istnieje (ścieżka składana ze zmiennej APP_NAME)
+        ssh -p ${{ env.SSH_PORT }} ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "mkdir -p public_html/${{ env.APP_NAME }}"
         
-        # Rsync z flagą --delete bez żadnych wykluczeń (kasuje wszystko na FTP co nie znajduje się w repo)
+        # Rsync z dynamiczną ścieżką i poprawioną końcówką (wprost do folderu domeny)
         rsync -avzc --delete \
           -e "ssh -p ${{ env.SSH_PORT }}" \
-          ./ ${{ env.SSH_USER }}@${{ env.SSH_HOST }}:${{ env.APP_PATH }}/
+          ./ ${{ env.SSH_USER }}@${{ env.SSH_HOST }}:public_html/${{ env.APP_NAME }}/
