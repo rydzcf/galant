@@ -47,9 +47,16 @@ export default async function Home(props: PageProps) {
   const messages = lang === 'pl' ? messagesPl : messagesEn;
 
   // Read local blog data
+// Read local blog data
   const blogDataPath = path.join(process.cwd(), 'src/data/blog.json');
   const blogData = JSON.parse(fs.readFileSync(blogDataPath, 'utf8'));
-  const posts = blogData.posts;
+  
+  // Bezpieczna obsługa: jeśli blogData to tablica, weź ją bezpośrednio. 
+  // Jeśli to obiekt, poszukaj klucza .posts. Jeśli nie ma niczego - daj pustą tablicę.
+  const posts = Array.isArray(blogData) 
+    ? blogData 
+    : (blogData?.posts || []);
+
   // const posts = await getBlogPosts();
 
   return (
