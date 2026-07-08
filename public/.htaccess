@@ -16,5 +16,5 @@ RewriteRule ^(.*)/?$ $1/index.html [L]
 
 ErrorDocument 404 /404.html
 
-SetEnv GH_TOKEN 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
+SetEnv GH_TOKEN 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
 SetEnv DEPLOY_SECRET f7Kx2mQpL9nRvT4wYhDjAcE6bZsN3uGo
