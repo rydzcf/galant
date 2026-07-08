@@ -11,7 +11,7 @@ type BlogPostProps = {
   params: Promise<{ lang: "pl" | "en"; slug: string }>;
 };
 
-const DATA_PATH = path.join(process.cwd(), "src/data/data.json");
+const DATA_PATH = path.join(process.cwd(), "src/data/blog.json");
 
 async function getPosts() {
   const raw = await fs.readFile(DATA_PATH, "utf-8");
