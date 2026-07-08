@@ -39,33 +39,25 @@ jobs:
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -p ${{ env.SSH_PORT }} ${{ env.SSH_HOST }} >> ~/.ssh/known_hosts
 
-    # 3. POBRANIE PLIKU Z LINKU (Wykonuje się NAJPIERW)
-    # Tworzy folder (jeśli nie istnieje) i pobiera najnowszy JSON nadpisując stary
+    # 3. POBRANIE PLIKU Z LINKU (Trafia prosto do src/data/blog.json)
     - name: Download Remote Data JSON
       run: |
-        mkdir -p app/data
-        curl -sL "http://serwer38987.lh.pl/upload/${{ env.APP_NAME }}/data.json" -o "app/data/data.json"
+        mkdir -p src/data
+        curl -sL "http://serwer38987.lh.pl/upload/${{ env.APP_NAME }}/data.json" -o "src/data/blog.json"
 
-    # 4. BUDOWANIE APLIKACJI (Wykonuje się POTEM)
-    # Next.js użyje dokładnie tego pliku, który pobrał curl sekundę wcześniej
+    # 4. Instalacja paczek oraz budowanie aplikacji (export)
     - name: Install dependencies & Build
       run: |
         npm ci
         npm run build
 
-    # 5. DIAGNOSTYKA
-    # Sprawdzamy w logach GitHub Actions, czy Next.js stworzył foldery pl/en
+    # 5. Sprawdzenie katalogu wynikowego (teraz foldery pl/en powinny tu być!)
     - name: Debug Build Output
       run: |
         echo "=== Zawartość folderu out po buildzie ==="
-        if [ -d "./out" ]; then
-          ls -la ./out
-        else
-          echo "BŁĄD: Folder ./out nie istnieje!"
-          ls -la
-        fi
+        ls -la ./out
 
-    # 6. WYSYŁKA NA SERWER (Bez problematycznej flagi)
+    # 6. Wysyłka na serwer FTP
     - name: Clean & Deploy via Rsync
       run: |
         ssh -p ${{ env.SSH_PORT }} ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "mkdir -p public_html/${{ env.APP_NAME }}"
