@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
+import { DevBundlerService } from "next/dist/server/lib/dev-bundler-service";
 
 // ============================================================
 // KONFIGURACJA
@@ -264,6 +265,13 @@ export default function BlogAdminPanel() {
             {isSubmitting ? "Wysyłanie..." : "Dodaj post"}
           </button>
         </form>
+      </section>
+      
+      {/* DEPLOY */}
+      <section>
+          <DeployButton 
+          token="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" 
+          repoUrl="https://api.github.com/repos/rydzcf/galant/dispatches"/>
       </section>
 
       {/* -------------------- LISTA POSTÓW + USUWANIE -------------------- */}
