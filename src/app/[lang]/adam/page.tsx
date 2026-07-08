@@ -9,7 +9,7 @@ export default function AdminPage() {
       return (
         <div className="h-screen w-full flex justify-center items-center flex-col">
           <button
-            className="cursor-pointer flex mx-auto border border-black px-2 py-1"
+            className="bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed px-6 py-3 rounded-full font-bold transition-transform active:scale-95"
             onClick={signInWithGoogle}>
             Log in with Google
           </button>
