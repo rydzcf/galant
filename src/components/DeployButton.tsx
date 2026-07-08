@@ -19,8 +19,8 @@ export default function DeployButton({token, repoUrl} :{token: string, repoUrl: 
   };
 
   return (
-    <button onClick={handleClick} disabled={isLoading}>
-      {isLoading ? "Uruchamianie..." : "Uruchom Deploy"}
+    <button onClick={handleClick} disabled={isLoading} className='cursor-pointer underline'>
+      {isLoading ? "Running..." : "Run Deploy"}
     </button>
   );
 }

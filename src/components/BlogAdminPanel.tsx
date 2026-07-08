@@ -271,7 +271,7 @@ export default function BlogAdminPanel() {
       <section>
           <DeployButton 
           token="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" 
-          repoUrl="https://api.github.com/repos/rydzcf/galant/dispatches"/>
+          repoUrl="https://api.github.com/repos/rydzcf/galant/actions/workflows/deploy.yml/dispatches"/>
       </section>
 
       {/* -------------------- LISTA POSTÓW + USUWANIE -------------------- */}
