@@ -39,14 +39,38 @@ jobs:
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -p ${{ env.SSH_PORT }} ${{ env.SSH_HOST }} >> ~/.ssh/known_hosts
 
-  # 3. POBRANIE PLIKU Z LINKU (Używamy wyłącznie nazwy blog.json)
-    - name: Download Remote Data JSON
+  # 3. POBRANIE PLIKU Z LINKU oraz ZDJĘĆ Z JSON-A
+    - name: Download Remote Data JSON and Images
       run: |
+        # 1. Tworzenie potrzebnych katalogów
         mkdir -p src/data
+        mkdir -p public/images/blog
+        
+        # 2. Pobranie głównego pliku JSON
         curl -fL "http://serwer38987.lh.pl/upload/${{ env.APP_NAME }}/data.json" -o "src/data/blog.json"
         
-        echo "=== Sprawdzam, czy plik został poprawnie zapisany ==="
+        echo "=== Sprawdzam, czy plik JSON został poprawnie zapisany ==="
         ls -la src/data/
+
+        # 3. Parsowanie JSON-a i pobieranie zdjęć
+        echo "=== Rozpoczynam pobieranie zdjęć z serwera zewnętrznego ==="
+        
+        # Używamy jq do wyciągnięcia zawartości pól "image" z każdego obiektu w tablicy
+        jq -r '.[].image' src/data/blog.json | while read -r img_url; do
+          # Pomijamy puste linie, jeśli jakieś się trafią
+          [ -z "$img_url" ] && continue
+          
+          # Wyciągamy samą nazwę pliku z adresu URL (np. "1783515797510-86673153.jpg")
+          img_name=$(basename "$img_url")
+          
+          echo "Pobieram: $img_name z adresu $img_url"
+          
+          # Pobieramy zdjęcie bezpośrednio pod pełnym adresem url
+          curl -s -fL "$img_url" -o "public/images/blog/$img_name" || echo "BŁĄD: Nie udało się pobrać: $img_name"
+        done
+
+        echo "=== Zawartość folderu ze zdjęciami bloga po pobraniu ==="
+        ls -la public/images/blog/
 
     # 4. Instalacja paczek oraz budowanie aplikacji (export)
     - name: Install dependencies & Build
