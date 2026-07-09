@@ -233,7 +233,7 @@ export default async function Home(props: PageProps) {
                     <Link href={`/${lang}/blog/${post.slug}`} className="group block cursor-pointer">
                       <div className="overflow-hidden rounded-3xl mb-6 shadow-lg aspect-[4/3] bg-secondary">
                         <Image
-                          src={post.image}
+                          src={`/images/blog/ + ${post.image.split('/').pop()}`}
                           alt={localeData.title}
                           width={600}
                           height={450}

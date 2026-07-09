@@ -41,7 +41,7 @@ export default async function BlogPost({ params }: BlogPostProps) {
       <section className="w-full relative min-h-[50vh] flex items-end pt-32 pb-16 bg-secondary/30 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
-            src={`images/blog/ + ${post.image.split('/').pop()}`}
+            src={`/images/blog/ + ${post.image.split('/').pop()}`}
             alt={localeData.title}
             fill
             priority
