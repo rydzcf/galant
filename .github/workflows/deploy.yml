@@ -63,52 +63,37 @@ jobs:
    # 6. Wysyłka na serwer i pobranie zdjęć BEZPOŚREDNIO na serwerze docelowym
     - name: Clean & Deploy via Rsync and Fetch Images
       run: |
-        # 1. Tworzymy strukturę folderów na serwerze docelowym (z uwzględnieniem images/blog)
+        # 1. Tworzymy strukturę folderów na serwerze docelowym, jeśli jeszcze nie istnieje
         ssh -p ${{ env.SSH_PORT }} ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "mkdir -p public_html/${{ env.APP_NAME }}/images/blog"
         
         # 2. Wysyłamy zbudowaną aplikację z folderu ./out
-        # Używamy --exclude='images/blog', aby rsync NIE kasował pobranych tam wcześniej zdjęć
+        # Używamy --exclude='images/blog', aby kolejne wdrożenia NIE kasowały już pobranych zdjęć na serwerze
         rsync -avzc --delete --exclude='.htaccess' --exclude='images/blog' \
           -e "ssh -p ${{ env.SSH_PORT }}" \
           ./out/ ${{ env.SSH_USER }}@${{ env.SSH_HOST }}:public_html/${{ env.APP_NAME }}/
         
-        # 3. Wykonanie skryptu synchronizacji zdjęć (Mirror) bezpośrednio na serwerze docelowym
-        echo "=== Uruchamiam synchronizację folderu zdjęć na serwerze docelowym ==="
+        # 3. Wykonanie skryptu pobierania zdjęć bezpośrednio z poziomu Twojego serwera docelowego
+        echo "=== Uruchamiam pobieranie zdjęć bezpośrednio na serwerze docelowym ==="
         
         ssh -p ${{ env.SSH_PORT }} ${{ env.SSH_USER }}@${{ env.SSH_HOST }} TARGET_APP="${{ env.APP_NAME }}" 'bash -s' << 'EOF'
+          # Wchodzimy do katalogu projektu na serwerze
           cd public_html/"$TARGET_APP"
           
-          # Tworzymy folder na zdjęcia, jeśli go nie ma, oraz plik tymczasowy na listę
-          mkdir -p images/blog
-          TMP_LIST=$(mktemp)
+          echo "Przeszukuję pliki HTML w poszukiwaniu zdjęć..."
           
-          echo "Pobieram aktualną listę plików z serwera źródłowego..."
-          # Pobieramy indeks strony HTTP i wyciągamy z niego nazwy plików obrazków
-          curl -s "http://serwer38987.lh.pl/upload/$TARGET_APP/img/" | grep -oE '[a-zA-Z0-9_-]+\.(jpg|jpeg|png|webp|gif)' | sort -u > "$TMP_LIST"
-          
-          # POBIERANIE: Jeśli pliku ze źródła nie ma w images/blog -> pobierz go
-          while read -r img_name; do
-            if [ ! -f "images/blog/$img_name" ]; then
-              echo "Wykryto brakujący plik. Pobieram: $img_name"
-              curl -s -fL "http://serwer38987.lh.pl/upload/$TARGET_APP/img/$img_name" -o "images/blog/$img_name"
-            fi
-          done < "$TMP_LIST"
-          
-          # KASOWANIE: Jeśli plik istnieje w images/blog, ale NIE MA go na liście źródłowej -> skasuj
-          echo "Sprawdzam, czy w images/blog są nadmiarowe pliki do usunięcia..."
-          find images/blog -type f | while read -r local_file; do
-            local_name=$(basename "$local_file")
+          # Szukamy nazw plików graficznych we wszystkich wygenerowanych plikach HTML (również w podfolderach językowych /pl /en)
+          find . -name "*.html" -exec grep -oE '[a-zA-Z0-9_-]+\.(jpg|jpeg|png|webp|gif)' {} + | cut -d: -f2 | sort -u | while read -r img_name; do
             
-            # Jeśli nazwy nie ma w pliku tymczasowym z listą źródłową -> usuwamy (jak --delete w rsync)
-            if ! grep -qx "$local_name" "$TMP_LIST"; then
-              echo "Wykryto nadmiarowy plik. Usuwam: $local_name"
-              rm "$local_file"
+            # Sprawdzamy, czy plik już istnieje lokalnie na serwerze, aby nie pobierać go niepotrzebnie ponownie
+            if [ ! -f "images/blog/$img_name" ]; then
+              echo "Serwer pobiera nowe zdjęcie: $img_name"
+              curl -s -fL "http://serwer38987.lh.pl/upload/$TARGET_APP/img/$img_name" -o "images/blog/$img_name" || echo "BŁĄD: Nie udało się pobrać: $img_name"
+            else
+              echo "Zdjęcie już istnieje, pomijam: $img_name"
             fi
+            
           done
           
-          # Czyszczenie pliku tymczasowego
-          rm "$TMP_LIST"
-          
-          echo "=== Synchronizacja zakończona sukcesem ==="
+          echo "=== Aktualna zawartość folderu ze zdjęciami na serwerze ==="
           ls -la images/blog/
         EOF
