@@ -207,7 +207,11 @@ export default async function Home(props: PageProps) {
 
       {/* Prices Section */}
       <section id="prices" className="w-full py-32 bg-background">
-      <div>Cennik</div>
+      <div className="container mx-auto px-4">
+          <Reveal>
+            <h2 className="text-4xl md:text-5xl font-bold mb-16">{messages.nav.prices}</h2>
+          </Reveal>
+          /* Prices Section */</div>
       </section>
 
       {/* Blog Section */}

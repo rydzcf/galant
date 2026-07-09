@@ -303,7 +303,7 @@ export default function BlogAdminPanel() {
                 >
                   <div className="relative w-20 h-20 shrink-0 rounded-xl overflow-hidden bg-secondary">
                     {post.image && (
-                      <Image src={post.image} alt={title} fill className="object-cover" />
+                      <Image src={`/images/blog/${post.image.split('/').pop()}`} alt={title} fill className="object-cover" />
                     )}
                   </div>
 
