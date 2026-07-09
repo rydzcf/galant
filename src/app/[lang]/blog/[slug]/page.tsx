@@ -62,9 +62,9 @@ export default async function BlogPost({ params }: BlogPostProps) {
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
                 {localeData.title}
               </h1>
-              <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed">
+              {/* <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed">
                 {localeData.summary}
-              </p>
+              </p> */}
             </div>
           </Reveal>
         </div>
