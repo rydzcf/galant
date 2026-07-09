@@ -39,38 +39,14 @@ jobs:
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -p ${{ env.SSH_PORT }} ${{ env.SSH_HOST }} >> ~/.ssh/known_hosts
 
-  # 3. POBRANIE PLIKU Z LINKU oraz ZDJĘĆ Z JSON-A
-    - name: Download Remote Data JSON and Images
+  # 3. POBRANIE PLIKU Z LINKU (Sam JSON)
+    - name: Download Remote Data JSON
       run: |
-        # 1. Tworzenie potrzebnych katalogów
         mkdir -p src/data
-        mkdir -p public/images/blog
-        
-        # 2. Pobranie głównego pliku JSON
         curl -fL "http://serwer38987.lh.pl/upload/${{ env.APP_NAME }}/data.json" -o "src/data/blog.json"
         
-        echo "=== Sprawdzam, czy plik JSON został poprawnie zapisany ==="
+        echo "=== Sprawdzam, czy plik został poprawnie zapisany ==="
         ls -la src/data/
-
-        # 3. Parsowanie JSON-a i pobieranie zdjęć
-        echo "=== Rozpoczynam pobieranie zdjęć z serwera zewnętrznego ==="
-        
-        # Używamy jq do wyciągnięcia zawartości pól "image" z każdego obiektu w tablicy
-        jq -r '.[].image' src/data/blog.json | while read -r img_url; do
-          # Pomijamy puste linie, jeśli jakieś się trafią
-          [ -z "$img_url" ] && continue
-          
-          # Wyciągamy samą nazwę pliku z adresu URL (np. "1783515797510-86673153.jpg")
-          img_name=$(basename "$img_url")
-          
-          echo "Pobieram: $img_name z adresu $img_url"
-          
-          # Pobieramy zdjęcie bezpośrednio pod pełnym adresem url
-          curl -s -fL "$img_url" -o "public/images/blog/$img_name" || echo "BŁĄD: Nie udało się pobrać: $img_name"
-        done
-
-        echo "=== Zawartość folderu ze zdjęciami bloga po pobraniu ==="
-        ls -la public/images/blog/
 
     # 4. Instalacja paczek oraz budowanie aplikacji (export)
     - name: Install dependencies & Build
@@ -84,11 +60,40 @@ jobs:
         echo "=== Zawartość folderu out po buildzie ==="
         ls -la ./out
 
-   # 6. Wysyłka na serwer FTP (Z wykluczeniem .htaccess)
-    - name: Clean & Deploy via Rsync
+   # 6. Wysyłka na serwer i pobranie zdjęć BEZPOŚREDNIO na serwerze docelowym
+    - name: Clean & Deploy via Rsync and Fetch Images
       run: |
-        ssh -p ${{ env.SSH_PORT }} ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "mkdir -p public_html/${{ env.APP_NAME }}"
+        # 1. Tworzymy strukturę folderów na serwerze docelowym, jeśli jeszcze nie istnieje
+        ssh -p ${{ env.SSH_PORT }} ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "mkdir -p public_html/${{ env.APP_NAME }}/images/blog"
         
-        rsync -avzc --delete --exclude='.htaccess' \
+        # 2. Wysyłamy zbudowaną aplikację z folderu ./out
+        # Używamy --exclude='images/blog', aby kolejne wdrożenia NIE kasowały już pobranych zdjęć na serwerze
+        rsync -avzc --delete --exclude='.htaccess' --exclude='images/blog' \
           -e "ssh -p ${{ env.SSH_PORT }}" \
           ./out/ ${{ env.SSH_USER }}@${{ env.SSH_HOST }}:public_html/${{ env.APP_NAME }}/
+        
+        # 3. Wykonanie skryptu pobierania zdjęć bezpośrednio z poziomu Twojego serwera docelowego
+        echo "=== Uruchamiam pobieranie zdjęć bezpośrednio na serwerze docelowym ==="
+        
+        ssh -p ${{ env.SSH_PORT }} ${{ env.SSH_USER }}@${{ env.SSH_HOST }} TARGET_APP="${{ env.APP_NAME }}" 'bash -s' << 'EOF'
+          # Wchodzimy do katalogu projektu na serwerze
+          cd public_html/"$TARGET_APP"
+          
+          echo "Przeszukuję pliki HTML w poszukiwaniu zdjęć..."
+          
+          # Szukamy nazw plików graficznych we wszystkich wygenerowanych plikach HTML (również w podfolderach językowych /pl /en)
+          find . -name "*.html" -exec grep -oE '[a-zA-Z0-9_-]+\.(jpg|jpeg|png|webp|gif)' {} + | cut -d: -f2 | sort -u | while read -r img_name; do
+            
+            # Sprawdzamy, czy plik już istnieje lokalnie na serwerze, aby nie pobierać go niepotrzebnie ponownie
+            if [ ! -f "images/blog/$img_name" ]; then
+              echo "Serwer pobiera nowe zdjęcie: $img_name"
+              curl -s -fL "http://serwer38987.lh.pl/upload/$TARGET_APP/img/$img_name" -o "images/blog/$img_name" || echo "BŁĄD: Nie udało się pobrać: $img_name"
+            else
+              echo "Zdjęcie już istnieje, pomijam: $img_name"
+            fi
+            
+          done
+          
+          echo "=== Aktualna zawartość folderu ze zdjęciami na serwerze ==="
+          ls -la images/blog/
+        EOF
