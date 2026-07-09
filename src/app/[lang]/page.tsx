@@ -245,7 +245,7 @@ export default async function Home(props: PageProps) {
                         />
                       </div>
                       <h3 className="text-2xl font-bold mb-4 group-hover:text-primary transition-colors">{localeData.title}</h3>
-                      <p className="text-muted-foreground line-clamp-3">{localeData.summary}</p>
+                      <p className="text-muted-foreground line-clamp-3">{`${localeData.summary} ...`}</p>
                     </Link>
                   </Reveal>
                 );
@@ -265,26 +265,8 @@ export default async function Home(props: PageProps) {
                 ? "Umów się na konsultację i odzyskaj pełnię witalności. Zrób pierwszy krok w stronę lepszego zdrowia."
                 : "Schedule a consultation and regain full vitality. Take the first step towards better health."}
             </p>
-            <div className="flex flex-col items-center gap-6 mb-12 mt-8">
-              <div className="flex items-center gap-4 text-xl opacity-90">
-                <MapPin className="w-8 h-8" />
-                <span>Łódź, ul. Tylna</span>
-              </div>
-              <div className="flex items-center gap-4 text-xl opacity-90">
-                <Clock className="w-8 h-8" />
-                <span>
-                  {lang === 'pl' ? "Pon - Pt: 09:00 - 18:00" : "Mon - Fri: 09:00 - 18:00"}
-                </span>
-              </div>
-              <div className="flex items-center gap-4 text-xl opacity-90">
-                 <Building className="w-8 h-8" />
-                 <span>
-                    {lang === 'pl' ? "Gabinet Medycyny Personalnej" : "Personalized Medicine Clinic"}
-                 </span>
-              </div>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-xl mx-auto">
+           
+            <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-2xl mx-auto">
               <a
                 href="tel:+48502759517"
                 className="flex flex-1 items-center justify-center gap-3 bg-foreground text-background hover:bg-foreground/90 px-6 py-4 rounded-full font-bold text-base transition-transform md:hover:scale-105 active:scale-95 shadow-xl"
@@ -293,6 +275,18 @@ export default async function Home(props: PageProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
                 +48 502 759 517
+              </a>
+
+              <a
+                href="mailto:dr.adamgalant@gmail.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-1 items-center justify-center gap-3 border-2 border-black text-black hover:bg-black/5 px-6 py-4 rounded-full font-bold text-base transition-transform md:hover:scale-105 active:scale-95 shadow-xl"
+              >
+                <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+  <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+</svg>
+                E-mail
               </a>
 
               <a
@@ -307,6 +301,26 @@ export default async function Home(props: PageProps) {
                 WhatsApp
               </a>
             </div>
+
+            <div className="flex flex-col items-center gap-6 mb-12 mt-8">
+              <div className="flex items-center gap-4 text-xl opacity-90">
+                <MapPin className="w-8 h-8" />
+                <span>Łódź, ul. Proletariacka 40</span>
+              </div>
+              <div className="flex items-center gap-4 text-xl opacity-90">
+                <Clock className="w-8 h-8" />
+                <span>
+                  {lang === 'pl' ? "Pon: 10:00 - 18:00" : "Mon: 10:00 - 18:00"}
+                </span>
+              </div>
+              <div className="flex items-center gap-4 text-xl opacity-90">
+                 <Building className="w-8 h-8" />
+                 <span>
+                    {lang === 'pl' ? "Gabinet Medycyny Personalnej" : "Personalized Medicine Clinic"}
+                 </span>
+              </div>
+            </div>
+
           </Reveal>
         </div>
       </section>
