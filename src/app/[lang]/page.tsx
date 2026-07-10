@@ -7,6 +7,7 @@ import Script from "next/script";
 import messagesPl from "@/messages/pl.json";
 import messagesEn from "@/messages/en.json";
 import { MapPin, Clock, Building } from "lucide-react";
+import { GalantLogo } from "@/components/GalantLogo";
 
 type PageProps = {
   params: Promise<{ lang: 'pl' | 'en' }>;
@@ -245,7 +246,7 @@ export default async function Home(props: PageProps) {
                 </div>
                 <div className="relative w-full md:w-1/2 min-h-[280px] md:min-h-[380px] mx-auto">
   <Image
-    src="/images/approach.jpg"
+    src="/images/approach.png"
     alt={messages.offer.approachTitle}
     fill
     className="object-cover object-center"
@@ -394,7 +395,7 @@ export default async function Home(props: PageProps) {
                 </span>
               </div>
               <div className="flex items-center gap-4 text-xl opacity-90">
-                 <Building className="w-8 h-8" />
+                 <GalantLogo className="w-8 h-8" />
                  <span>
                     {lang === 'pl' ? "Gabinet Medycyny Personalnej" : "Personalized Medicine Clinic"}
                  </span>
