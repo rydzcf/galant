@@ -1,7 +1,7 @@
 "use client"
 import BlogAdminPanel from "@/components/BlogAdminPanel";
 import { useFireBase } from "@/hooks/useFireBase";
-import { div } from "framer-motion/client";
+
 
 export default function AdminPage() {
     const { user, signInWithGoogle, signOut, fbError } = useFireBase();
