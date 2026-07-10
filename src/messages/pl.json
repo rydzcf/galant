@@ -9,7 +9,159 @@
   "hero": {
     "title": "Medycyna Personalna",
     "subtitle": "lek. Adam Galant",
-    "description": "Specjalizuję się w Terapii Hormonalnej Zastępczej (TRT) testosteronem. Skuteczne leczenie poprawiające jakość życia mężczyzn."
+    "description": "Zapraszam na konsultacje z zakresu medycyny rodzinnej i medycyny stylu życia. W swojej pracy łączę wieloletnie doświadczenie kliniczne z indywidualnym podejściem do każdego pacjenta. Wierzę, że najlepsze efekty leczenia osiąga się dzięki partnerskiej współpracy, nowoczesnej diagnostyce oraz świadomemu dbaniu o zdrowie każdego dnia."
+  },
+  "about": {
+    "education": "Wykształcenie",
+    "educationItems": [
+      "Absolwent Uniwersytetu Medycznego w Łodzi",
+      "Specjalista medycyny rodzinnej",
+      "Pełna licencja lekarska w Wielkiej Brytanii od 2015 roku"
+    ],
+    "career": "Kariera zawodowa",
+    "careerItems": [
+      "Blisko 20 lat doświadczenia w opiece nad pacjentami w każdym wieku",
+      "Praktyka lekarska w Polsce oraz w Wielkiej Brytanii",
+      "Członek Kolegium Lekarzy Rodzinnych w Polsce oraz Polskiego Towarzystwa Medycyny Stylu Życia"
+    ],
+    "paragraphs": [
+      "Jestem specjalistą medycyny rodzinnej oraz absolwentem Uniwersytetu Medycznego w Łodzi. Od blisko 20 lat z zaangażowaniem towarzyszę pacjentom na różnych etapach życia – opiekując się zarówno osobami dorosłymi, jak i najmłodszymi. Moje doświadczenie zawodowe rozwijam nie tylko w Polsce, ale również w Wielkiej Brytanii, gdzie od 2015 roku posiadam pełną licencję lekarską. Dzięki temu łączę różne podejścia i standardy opieki medycznej, oferując pacjentom kompleksowe i nowoczesne spojrzenie na zdrowie.",
+      "W swojej codziennej praktyce szczególną wagę przywiązuję do indywidualnego podejścia do każdego pacjenta. Wierzę, że skuteczne leczenie zaczyna się od wzajemnego zaufania, uważnego słuchania i zrozumienia potrzeb oraz stylu życia osoby, która zgłasza się po pomoc. Każdą konsultację traktuję jako wspólną drogę do poprawy zdrowia i jakości życia.",
+      "Jako lekarz medycyny stylu życia koncentruję się nie tylko na leczeniu objawów, ale przede wszystkim na docieraniu do przyczyn problemów zdrowotnych. Łączę wiedzę medycyny klasycznej z promowaniem zdrowych nawyków – odpowiednio zbilansowanej diety, regularnej aktywności fizycznej, właściwego snu oraz redukcji stresu. Uważam, że nawet niewielkie zmiany w codziennym funkcjonowaniu mogą przynieść znaczącą poprawę samopoczucia i stanu zdrowia.",
+      "Szczególnym obszarem moich zainteresowań są choroby cywilizacyjne, takie jak otyłość, nadciśnienie tętnicze, cukrzyca, zaburzenia hormonalne czy przewlekłe zespoły bólowe. W pracy z pacjentami skupiam się na długofalowym wsparciu i edukacji, pomagając im lepiej zrozumieć swoje ciało i podejmować świadome decyzje zdrowotne.",
+      "Nieustannie podnoszę swoje kwalifikacje, uczestnicząc w licznych kursach, szkoleniach i konferencjach naukowych, aby oferować pacjentom opiekę zgodną z najnowszą wiedzą medyczną. Jestem członkiem Kolegium Lekarzy Rodzinnych w Polsce oraz Polskiego Towarzystwa Medycyny Stylu Życia, co pozwala mi być na bieżąco z aktualnymi standardami i kierunkami rozwoju medycyny."
+    ]
+  },
+  "offer": {
+    "intro": "Oferuję kompleksową opiekę medyczną opartą na aktualnej wiedzy, wieloletnim doświadczeniu oraz indywidualnym podejściu do każdego pacjenta. Podczas konsultacji skupiam się nie tylko na rozpoznaniu i leczeniu choroby, ale również na znalezieniu jej przyczyn oraz zaplanowaniu skutecznego, długofalowego postępowania.",
+    "services": [
+      {
+        "title": "Otyłość i nadwaga",
+        "items": [
+          "Diagnostyka przyczyn nadmiernej masy ciała",
+          "Nowoczesne leczenie otyłości",
+          "Wsparcie w trwałej zmianie stylu życia"
+        ]
+      },
+      {
+        "title": "Insulinooporność i choroby metaboliczne",
+        "items": [
+          "Diagnostyka i leczenie insulinooporności",
+          "Zespół metaboliczny",
+          "Profilaktyka i leczenie powikłań metabolicznych"
+        ]
+      },
+      {
+        "title": "Cukrzyca",
+        "items": [
+          "Diagnostyka",
+          "Leczenie cukrzycy typu 2",
+          "Edukacja zdrowotna i monitorowanie terapii"
+        ]
+      },
+      {
+        "title": "Nadciśnienie tętnicze",
+        "items": [
+          "Diagnostyka przyczyn",
+          "Dobór i optymalizacja leczenia",
+          "Profilaktyka powikłań sercowo-naczyniowych"
+        ]
+      },
+      {
+        "title": "Zaburzenia lipidowe",
+        "items": [
+          "Podwyższony cholesterol i trójglicerydy",
+          "Ocena ryzyka sercowo-naczyniowego",
+          "Leczenie farmakologiczne i niefarmakologiczne"
+        ]
+      },
+      {
+        "title": "Choroby tarczycy",
+        "items": [
+          "Diagnostyka i leczenie niedoczynności tarczycy",
+          "Interpretacja wyników badań",
+          "Monitorowanie terapii"
+        ]
+      },
+      {
+        "title": "Andropauza i zdrowie mężczyzn",
+        "items": [
+          "Diagnostyka zaburzeń hormonalnych",
+          "Ocena objawów związanych z niedoborem testosteronu",
+          "Kompleksowe podejście do zdrowia mężczyzn"
+        ]
+      },
+      {
+        "title": "Zaburzenia snu",
+        "items": [
+          "Diagnostyka przyczyn przewlekłego zmęczenia i problemów ze snem",
+          "Zalecenia dotyczące higieny snu",
+          "Leczenie i dalsza diagnostyka w razie potrzeby"
+        ]
+      },
+      {
+        "title": "Bóle kręgosłupa i przewlekłe dolegliwości bólowe",
+        "items": [
+          "Diagnostyka",
+          "Leczenie zachowawcze",
+          "Planowanie dalszego postępowania terapeutycznego"
+        ]
+      },
+      {
+        "title": "Choroby przewodu pokarmowego",
+        "items": [
+          "Bóle brzucha",
+          "Refluks",
+          "Choroby żołądka i jelit",
+          "Diagnostyka przewlekłych dolegliwości"
+        ]
+      },
+      {
+        "title": "Choroby wewnętrzne",
+        "items": [
+          "Diagnostyka i leczenie najczęstszych schorzeń internistycznych",
+          "Opieka nad pacjentami z chorobami przewlekłymi",
+          "Profilaktyka zdrowotna oraz okresowe bilanse zdrowia"
+        ]
+      }
+    ],
+    "approachTitle": "Moje podejście",
+    "approachText": "W pracy łączę medycynę rodzinną z medycyną stylu życia. Oznacza to, że oprócz leczenia farmakologicznego zwracam uwagę na dietę, aktywność fizyczną, sen, redukcję stresu i codzienne nawyki, które mają istotny wpływ na zdrowie. Celem każdej konsultacji jest nie tylko poprawa wyników badań, ale przede wszystkim lepsze samopoczucie, większa sprawność i trwała poprawa jakości życia."
+  },
+  "prices": {
+    "title": "Cennik konsultacji",
+    "items": [
+      {
+        "title": "Konsultacja lekarza rodzinnego",
+        "badge": null,
+        "description": "Diagnostyka i leczenie chorób wewnętrznych, infekcji, nadciśnienia, cukrzycy oraz innych schorzeń przewlekłych.",
+        "price": "200 zł"
+      },
+      {
+        "title": "Konsultacja do TRT",
+        "badge": "Zdrowie mężczyzn",
+        "description": "Ocena objawów andropauzy, diagnostyka hormonalna i kwalifikacja do terapii testosteronem.",
+        "price": "450 zł"
+      },
+      {
+        "title": "Konsultacja: insulinooporność / nadwaga / otyłość",
+        "badge": "Najczęściej wybierana",
+        "description": "Kompleksowa ocena metaboliczna, analiza wyników badań oraz plan leczenia i zmiany stylu życia.",
+        "price": "od 250 zł"
+      },
+      {
+        "title": "Konsultacja online",
+        "badge": null,
+        "description": "Wygodna forma kontaktu dla pacjentów z całej Polski (dotyczy stałych pacjentów).",
+        "price": "150 zł"
+      },
+      {
+        "title": "Leczenie otyłości",
+        "badge": "Program terapeutyczny",
+        "description": "Indywidualnie dobrany plan leczenia otyłości i wsparcie w redukcji masy ciała.",
+        "price": "od 250 zł"
+      }
+    ]
   },
   "footer": {
     "rights": "Medycyna Personalna - wszelkie prawa zastrzeżone."

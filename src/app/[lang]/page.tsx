@@ -3,6 +3,7 @@ import path from "path";
 import { Reveal } from "@/components/Reveal";
 import Image from "next/image";
 import Link from "next/link";
+import Script from "next/script";
 import messagesPl from "@/messages/pl.json";
 import messagesEn from "@/messages/en.json";
 import { MapPin, Clock, Building } from "lucide-react";
@@ -74,7 +75,7 @@ export default async function Home(props: PageProps) {
                 <p className="text-xl md:text-2xl lg:text-3xl text-primary font-medium mb-6 md:mb-8">
                   {messages.hero.subtitle}
                 </p>
-                <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground leading-relaxed mb-8 md:mb-12">
+                <p className="text-md md:text-ld lg:text-xl text-muted-foreground leading-relaxed mb-8 md:mb-12">
                   {messages.hero.description}
                 </p>
 
@@ -131,87 +132,166 @@ export default async function Home(props: PageProps) {
       <section id="about" className="w-full py-32 bg-primary/10">
         <div className="container mx-auto px-4">
           <Reveal>
-            <div className="flex flex-col md:flex-row gap-16 items-center">
-              <div className="hidden md:flex md:w-1/2 flex-col gap-6">
+            <h2 className="text-4xl md:text-5xl font-bold mb-16 text-primary">{messages.nav.about}</h2>
+
+            <div className="flex flex-col md:flex-row gap-10 items-stretch mb-16">
+              <div className="hidden md:flex md:w-1/3 flex-col">
                 <Image
                   src="/images/omnie.jpeg"
                   alt="lek. Adam Galant"
                   width={600}
                   height={800}
-                  className="object-cover w-full h-auto aspect-square lg:max-w-[450px] mx-auto rounded-full shadow-2xl border-4 border-background"
+                  className="object-cover w-full h-auto aspect-square max-w-[400px] mx-auto rounded-full shadow-2xl border-4 border-background"
                 />
               </div>
-              <div className="md:w-1/2">
-                <h2 className="text-4xl md:text-5xl font-bold mb-8 text-primary">{messages.nav.about}</h2>
-                <div className="space-y-6 text-lg text-muted-foreground">
-                  <p>
-                    {lang === 'pl'
-                      ? "Nazywam się Adam Galant i jestem lekarzem specjalizującym się w leczeniu zaburzeń hormonalnych, ze szczególnym uwzględnieniem Terapii Hormonalnej Zastępczej (TRT)."
-                      : "My name is Adam Galant and I am a doctor specializing in the treatment of hormonal disorders, with a particular focus on Testosterone Replacement Therapy (TRT)."}
-                  </p>
-
-                  <div className="bg-secondary/30 p-6 rounded-3xl border border-border mt-8">
-                    <h3 className="text-xl font-bold text-foreground mb-3">{lang === 'pl' ? "Wykształcenie" : "Education"}</h3>
-                    <ul className="list-disc list-inside space-y-2 marker:text-primary">
-                      <li>{lang === 'pl' ? "Absolwent Warszawskiego Uniwersytetu Medycznego" : "Graduate of Warsaw Medical University"}</li>
-                      <li>{lang === 'pl' ? "Specjalizacje zdobyte z wyróżnieniem" : "Specializations obtained with honors"}</li>
-                      <li>{lang === 'pl' ? "Certyfikowane kursy endokrynologiczne" : "Certified endocrinology courses"}</li>
-                    </ul>
-                  </div>
-
-                  <div className="bg-secondary/30 p-6 rounded-3xl border border-border mt-6">
-                    <h3 className="text-xl font-bold text-foreground mb-3">{lang === 'pl' ? "Kariera zawodowa" : "Professional Career"}</h3>
-                    <ul className="list-disc list-inside space-y-2 marker:text-primary">
-                      <li>{lang === 'pl' ? "Wieloletnie doświadczenie w leczeniu pacjentów z niedoborami TRT" : "Many years of experience treating TRT deficiency patients"}</li>
-                      <li>{lang === 'pl' ? "Indywidualne dobieranie terapii medycznych" : "Individualized selection of medical therapies"}</li>
-                      <li>{lang === 'pl' ? "Praca z najnowocześniejszymi protokołami zaburzeń męskich" : "Work with state-of-the-art male disorder protocols"}</li>
-                    </ul>
-                  </div>
+              <div className="md:w-2/3 flex flex-col gap-6 justify-center">
+                <div className="bg-secondary/30 p-6 rounded-3xl border border-border">
+                  <h3 className="text-xl font-bold text-foreground mb-3">{messages.about.education}</h3>
+                  <ul className="list-disc list-inside space-y-2 text-muted-foreground marker:text-primary">
+                    {messages.about.educationItems.map((item: string, index: number) => (
+                      <li key={index}>{item}</li>
+                    ))}
+                  </ul>
                 </div>
+
+                <div className="bg-secondary/30 p-6 rounded-3xl border border-border">
+                  <h3 className="text-xl font-bold text-foreground mb-3">{messages.about.career}</h3>
+                  <ul className="list-disc list-inside space-y-2 text-muted-foreground marker:text-primary">
+                    {messages.about.careerItems.map((item: string, index: number) => (
+                      <li key={index}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-6 text-lg text-muted-foreground leading-relaxed">
+              {messages.about.paragraphs.map((paragraph: string, index: number) => (
+                <p key={index}>{paragraph}</p>
+              ))}
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Offer Section */}
+      <section id="offer" className="w-full py-32 bg-secondary/30">
+        <div className="container mx-auto px-4">
+          <Reveal>
+            <h2 className="text-4xl md:text-5xl font-bold mb-8 text-center">{messages.nav.offer}</h2>
+          </Reveal>
+
+          <Reveal delay={0.1}>
+            <p className="text-lg text-muted-foreground leading-relaxed max-w-3xl mx-auto text-center mb-16">
+              {messages.offer.intro}
+            </p>
+          </Reveal>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {messages.offer.services.map((service: { title: string; items: string[] }, index: number) => (
+              <Reveal key={service.title} delay={0.1 + (index % 3) * 0.15}>
+                <div className="card h-full bg-background rounded-3xl p-8 shadow-xl border border-border/50">
+                  <h3 className="text-xl font-bold mb-4 text-primary">{service.title}</h3>
+                  <ul className="list-disc list-inside space-y-2 text-muted-foreground marker:text-primary">
+                    {service.items.map((item, itemIndex) => (
+                      <li key={itemIndex}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+
+          <Reveal delay={0.2}>
+            <div className="mt-16 bg-background rounded-3xl shadow-xl border border-border/50 mx-auto overflow-hidden">
+              <div className="flex flex-col md:flex-row items-stretch">
+                <div className="p-8 md:p-12 md:w-1/2 flex flex-col justify-center">
+                  <h3 className="text-2xl md:text-3xl font-bold mb-4 text-primary">{messages.offer.approachTitle}</h3>
+                  <p className="text-lg text-muted-foreground leading-relaxed mb-8">{messages.offer.approachText}</p>
+
+                  {lang === 'pl' && (
+                    <>
+                      <Script
+                        id="mydr-pp-script"
+                        strategy="lazyOnload"
+                        dangerouslySetInnerHTML={{
+                          __html: `
+                            const mydrScript = document.getElementsByTagName('script')[0];
+                            const js = document.createElement('script');
+                            js.src = 'https://mydr.pl/static/mydr-pp.min.js';
+                            mydrScript.parentNode.insertBefore(js, mydrScript);
+                            js.onload = () => {
+                                const PatientsPlugin = new window.PatientsPlugin();
+                                PatientsPlugin.init({
+                                    app: 'https://mydr.pl/patients_plugin',
+                                    plugin: 'https://mydr.pl/static',
+                                });
+                            };
+                          `,
+                        }}
+                      />
+<button
+    className="btn-mydr-pp"
+    data-doctor=""
+    data-speciality=""
+    data-visitkind=""
+    data-evisit="true"
+    data-appname="drw"
+    data-token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNpbGl0eV9pZCI6MjgyMjl9.c4nMlv1icprdH8vb6zYd9ZQbvzNtFE7FG-jYaXcuuow"
+>
+</button>
+                    </>
+                  )}
+                </div>
+                <div className="relative w-full md:w-1/2 min-h-[280px] md:min-h-[380px] mx-auto">
+  <Image
+    src="/images/approach.jpg"
+    alt={messages.offer.approachTitle}
+    fill
+    className="object-cover object-center"
+  />
+</div>
               </div>
             </div>
           </Reveal>
         </div>
       </section>
 
-      {/* Transformations / Offer Section */}
-      <section id="offer" className="w-full py-32 bg-secondary/30">
-        <div className="container mx-auto px-4">
-          <Reveal>
-            <h2 className="text-4xl md:text-5xl font-bold mb-16 text-center">{messages.nav.offer}</h2>
-          </Reveal>
-
-          <div className="grid md:grid-cols-2 gap-16">
-            <Reveal delay={0.2}>
-              <div className="card bg-background rounded-3xl p-8 shadow-xl border border-border/50">
-                <h3 className="text-2xl font-bold mb-6">Przed Terapią</h3>
-                <Image src="/images/otyły mężczyzna na siłowni.webp" alt="Przed" width={600} height={400} className="rounded-xl w-full object-cover mb-6 aspect-video" />
-                <p className="text-muted-foreground">
-                  {lang === 'pl' ? "Brak energii, nadwaga, spadki nastroju i brak motywacji do treningu." : "Lack of energy, overweight, mood drops and lack of motivation to train."}
-                </p>
-              </div>
-            </Reveal>
-
-            <Reveal delay={0.4}>
-              <div className="card bg-background rounded-3xl p-8 shadow-xl border border-border/50">
-                <h3 className="text-2xl font-bold mb-6 text-primary">Po Terapii TRT</h3>
-                <Image src="/images/umięśniony facet 1.webp" alt="Po" width={600} height={400} className="rounded-xl w-full object-cover mb-6 aspect-video" />
-                <p className="text-muted-foreground">
-                  {lang === 'pl' ? "Wzrost siły, poprawa sylwetki, wyższy poziom energii i lepsze samopoczucie." : "Increased strength, improved physique, higher energy levels and better well-being."}
-                </p>
-              </div>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
       {/* Prices Section */}
       <section id="prices" className="w-full py-32 bg-background">
-      <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4">
           <Reveal>
-            <h2 className="text-4xl md:text-5xl font-bold mb-16">{messages.nav.prices}</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-16 text-center">{messages.prices.title}</h2>
           </Reveal>
-          /* Prices Section */</div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {messages.prices.items.map((item: { title: string; badge: string | null; description: string; price: string }, index: number) => {
+              const isFeatured = !!item.badge;
+              return (
+                <Reveal key={item.title} delay={0.1 + (index % 3) * 0.15}>
+                  <div
+                    className={`card h-full flex flex-col rounded-3xl p-8 shadow-xl border transition-transform md:hover:scale-105 ${
+                      isFeatured
+                        ? "bg-primary text-primary-foreground border-primary"
+                        : "bg-secondary/30 border-border/50"
+                    }`}
+                  >
+                    {item.badge && (
+                      <span className="inline-block self-start bg-background text-primary text-xs font-bold uppercase tracking-wide px-3 py-1 rounded-full mb-4">
+                        {item.badge}
+                      </span>
+                    )}
+                    <h3 className="text-xl font-bold mb-3">{item.title}</h3>
+                    <p className={`mb-6 flex-1 ${isFeatured ? "text-primary-foreground/90" : "text-muted-foreground"}`}>
+                      {item.description}
+                    </p>
+                    <p className="text-3xl font-bold">{item.price}</p>
+                  </div>
+                </Reveal>
+              );
+            })}
+          </div>
+        </div>
       </section>
 
       {/* Blog Section */}
@@ -327,4 +407,3 @@ export default async function Home(props: PageProps) {
     </div>
   );
 }
-

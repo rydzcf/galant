@@ -9,7 +9,158 @@
   "hero": {
     "title": "Personalized Medicine",
     "subtitle": "Dr. Adam Galant",
-    "description": "I specialize in Testosterone Replacement Therapy (TRT). Effective treatment enhancing men's quality of life."
+    "description": "Providing personalised care in Family Medicine and Lifestyle Medicine. I believe that excellent healthcare begins with listening. By combining years of clinical experience, evidence-based medicine, and a collaborative approach, I help patients prevent illness, manage chronic conditions, and achieve lasting improvements in their health and quality of life."
+  },
+  "about": {
+    "education": "Education",
+    "educationItems": [
+      "Graduate of the Medical University of Łódź",
+      "Family Medicine specialist",
+      "Full medical licence in the United Kingdom since 2015"
+    ],
+    "career": "Professional Career",
+    "careerItems": [
+      "Nearly 20 years of experience caring for patients of all ages",
+      "Clinical practice in both Poland and the United Kingdom",
+      "Member of the College of Family Physicians in Poland and the Polish Society of Lifestyle Medicine"
+    ],
+    "paragraphs": [
+      "I am a Family Medicine specialist and a graduate of the Medical University of Łódź. For nearly 20 years, I have been providing comprehensive medical care to patients of all ages, from young children to older adults. Since 2015, I have also held a full medical licence to practise in the United Kingdom, and for more than a decade I have combined my clinical work in Poland with caring for patients in the UK. This experience has given me a broad perspective on different healthcare systems and enables me to provide modern, evidence-based, patient-centred care.",
+      "I believe that effective healthcare begins with trust, careful listening, and understanding each person's individual needs, values, and lifestyle. Every consultation is an opportunity to work together to improve your health and quality of life, with decisions made in partnership rather than simply prescribing treatment.",
+      "As a Lifestyle Medicine physician, I focus not only on treating disease but also on identifying and addressing its underlying causes. Alongside conventional medical care, I help patients make sustainable lifestyle changes involving nutrition, physical activity, sleep, stress management, and other evidence-based interventions. Even small, realistic changes can have a significant impact on long-term health and wellbeing.",
+      "My particular clinical interests include obesity, hypertension, diabetes, hormonal disorders, and chronic pain. I enjoy supporting patients over the long term, helping them better understand their health, prevent disease, and make informed decisions that lead to lasting improvements.",
+      "Continuing professional development is an essential part of my practice. I regularly attend postgraduate courses, specialist training programmes, and medical conferences to ensure that my patients receive care based on the latest scientific evidence and current clinical guidelines. I am a member of the College of Family Physicians in Poland and the Polish Society of Lifestyle Medicine, and I welcome both Polish and international patients, offering consultations in English."
+    ]
+  },
+  "offer": {
+    "intro": "I provide comprehensive medical care based on current evidence, many years of clinical experience, and a personalised approach to every patient. During each consultation, I focus not only on diagnosing and treating disease but also on identifying its underlying causes and developing a practical, long-term management plan tailored to your individual needs.",
+    "services": [
+      {
+        "title": "Weight Management and Obesity",
+        "items": [
+          "Assessment of the causes of excess weight and obesity",
+          "Evidence-based obesity treatment, including modern pharmacological therapies where appropriate",
+          "Long-term support for sustainable lifestyle change"
+        ]
+      },
+      {
+        "title": "Insulin Resistance and Metabolic Health",
+        "items": [
+          "Diagnosis and management of insulin resistance",
+          "Assessment and treatment of metabolic syndrome",
+          "Prevention and management of metabolic complications"
+        ]
+      },
+      {
+        "title": "Type 2 Diabetes",
+        "items": [
+          "Diagnosis and comprehensive diabetes care",
+          "Individualised treatment plans",
+          "Ongoing monitoring, education, and support for long-term diabetes management"
+        ]
+      },
+      {
+        "title": "High Blood Pressure (Hypertension)",
+        "items": [
+          "Investigation of underlying causes",
+          "Optimisation of blood pressure treatment",
+          "Cardiovascular risk assessment and prevention"
+        ]
+      },
+      {
+        "title": "High Cholesterol and Lipid Disorders",
+        "items": [
+          "Assessment and management of elevated cholesterol and triglycerides",
+          "Cardiovascular risk evaluation",
+          "Lifestyle and medication-based treatment"
+        ]
+      },
+      {
+        "title": "Thyroid Disorders",
+        "items": [
+          "Diagnosis and treatment of hypothyroidism",
+          "Interpretation of thyroid function tests",
+          "Ongoing monitoring and optimisation of treatment"
+        ]
+      },
+      {
+        "title": "Men's Health and Andropause",
+        "items": [
+          "Assessment of hormonal disorders",
+          "Evaluation of symptoms related to testosterone deficiency",
+          "Comprehensive, evidence-based men's health care"
+        ]
+      },
+      {
+        "title": "Sleep Problems and Fatigue",
+        "items": [
+          "Assessment of chronic fatigue and sleep disorders",
+          "Practical advice on improving sleep quality and sleep hygiene",
+          "Further investigation and treatment where appropriate"
+        ]
+      },
+      {
+        "title": "Back Pain and Chronic Pain Conditions",
+        "items": [
+          "Assessment and diagnosis",
+          "Conservative treatment strategies",
+          "Long-term management plans and referral when necessary"
+        ]
+      },
+      {
+        "title": "Digestive Health",
+        "items": [
+          "Gastro-oesophageal reflux disease (GORD/GERD)",
+          "Stomach and bowel disorders",
+          "Assessment of persistent gastrointestinal symptoms"
+        ]
+      },
+      {
+        "title": "General Internal Medicine",
+        "items": [
+          "Diagnosis and treatment of common adult medical conditions",
+          "Ongoing care for patients with chronic diseases",
+          "Preventive healthcare, health screening, and routine medical check-ups"
+        ]
+      }
+    ],
+    "approachTitle": "My Approach",
+    "approachText": "My practice combines Family Medicine with the principles of Lifestyle Medicine. While medication is an important part of treatment when needed, I also focus on the lifestyle factors that have the greatest impact on long-term health — including nutrition, physical activity, sleep, stress management, and everyday habits. The aim of every consultation is not simply to improve test results, but to help you feel better, stay healthier, and enjoy a better quality of life."
+  },
+  "prices": {
+    "title": "Consultation Fees",
+    "items": [
+      {
+        "title": "Family Medicine Consultation",
+        "badge": null,
+        "description": "Diagnosis and treatment of acute illnesses, infections, high blood pressure, diabetes, and other acute and chronic medical conditions.",
+        "price": "PLN 200"
+      },
+      {
+        "title": "Men's Health & TRT Consultation",
+        "badge": "Men's Health",
+        "description": "Assessment of symptoms associated with testosterone deficiency, hormonal evaluation, and eligibility assessment for testosterone replacement therapy (TRT).",
+        "price": "PLN 450"
+      },
+      {
+        "title": "Metabolic Health Consultation",
+        "badge": "Most Popular",
+        "description": "Comprehensive metabolic assessment, review of laboratory results, and a personalised treatment and lifestyle plan.",
+        "price": "From PLN 250"
+      },
+      {
+        "title": "Online Follow-up Consultation",
+        "badge": null,
+        "description": "A convenient option for established patients living anywhere in Poland.",
+        "price": "From PLN 150"
+      },
+      {
+        "title": "Medical Weight Management Programme",
+        "badge": "Therapeutic Programme",
+        "description": "A personalised obesity treatment plan combining evidence-based medical therapy, lifestyle interventions, and ongoing support for sustainable weight loss.",
+        "price": "From PLN 250"
+      }
+    ]
   },
   "footer": {
     "rights": "Personalized Medicine all rights reserved."
