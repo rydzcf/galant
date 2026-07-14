@@ -2,13 +2,21 @@
 import BlogAdminPanel from "@/components/BlogAdminPanel";
 import { useFireBase } from "@/hooks/useFireBase";
 
-
 export default function AdminPage() {
     const { user, signInWithGoogle, signOut, fbError } = useFireBase();
     console.log(user, fbError);
+
+    // Dynamicznie wstrzykujemy tag noindex bezpośrednio w renderze strony
+    const robotsNoIndex = (
+      <head>
+        <meta name="robots" content="noindex, nofollow" />
+      </head>
+    );
+
     if (!user) {
       return (
         <div className="h-screen w-full flex justify-center items-center flex-col">
+          {robotsNoIndex}
           <button
             className="bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed px-6 py-3 rounded-full font-bold transition-transform active:scale-95"
             onClick={signInWithGoogle}>
@@ -18,7 +26,11 @@ export default function AdminPage() {
         </div>
       );
     }
-    return <div className="pt-20">
-      <BlogAdminPanel />; 
+
+    return (
+      <div className="pt-20">
+        {robotsNoIndex}
+        <BlogAdminPanel />
       </div>
+    );
 }

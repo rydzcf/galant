@@ -1,4 +1,4 @@
-name: Deploy to galant.emer.co
+name: Deploy to medycynapersonalna.pl
 
 on:
   push:
@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  APP_NAME: "galant.emer.co"
+  APP_NAME: "medycynapersonalna.pl"
   SSH_HOST: "185.135.91.50"
   SSH_PORT: "40022"
   SSH_USER: "serwer333502"
