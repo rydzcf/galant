@@ -7,7 +7,7 @@ import { useState, useMemo } from "react";
 
 
 
-const ALLOWED_USERS = ["rydzcf@gmail.com, dr.adamgalant@gmail.com"];
+const ALLOWED_USERS = ["rydzcf@gmail.com", "dr.adamgalant@gmail.com"];
 // Firebase initialization should be done outside of the hook to prevent re-initialization
  const firebaseConfig = {
   apiKey: "AIzaSyDL35L-dqLBhVnoKE2NDbsN1YSxE4hFl38",
