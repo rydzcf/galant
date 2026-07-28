@@ -39,26 +39,19 @@ jobs:
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -p ${{ env.SSH_PORT }} ${{ env.SSH_HOST }} >> ~/.ssh/known_hosts
 
-  # 3. POBRANIE PLIKU Z LINKU (Sam JSON)
-    - name: Download Remote Data JSON
-      run: |
-        mkdir -p src/data && curl -fsSL --retry 5 --retry-delay 3 -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" "http://serwer38987.lh.pl/upload/${{ env.APP_NAME }}/data.json" -o "src/data/blog.json"
-        echo "=== Sprawdzam, czy plik został poprawnie zapisany ==="
-        ls -la src/data/
-
-    # 4. Instalacja paczek oraz budowanie aplikacji (export)
+    # 3. Instalacja paczek oraz budowanie aplikacji (export)
     - name: Install dependencies & Build
       run: |
         npm ci
         npm run build
 
-    # 5. Sprawdzenie katalogu wynikowego (teraz foldery pl/en powinny tu być!)
+    # 4. Sprawdzenie katalogu wynikowego (teraz foldery pl/en powinny tu być!)
     - name: Debug Build Output
       run: |
         echo "=== Zawartość folderu out po buildzie ==="
         ls -la ./out
 
-   # 6. Wysyłka na serwer i pobranie zdjęć BEZPOŚREDNIO na serwerze docelowym
+   # 5. Wysyłka na serwer i pobranie zdjęć BEZPOŚREDNIO na serwerze docelowym
     - name: Clean & Deploy via Rsync and Fetch Images
       run: |
         # 1. Tworzymy strukturę folderów na serwerze docelowym, jeśli jeszcze nie istnieje
