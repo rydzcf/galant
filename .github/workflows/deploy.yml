@@ -42,9 +42,9 @@ jobs:
   # 3. POBRANIE PLIKU Z LINKU (Sam JSON)
     - name: Download Remote Data JSON
       run: |
-        mkdir -p src/data
-        curl -fsSL --retry 5 --retry-delay 3 "http://serwer38987.lh.pl/upload/${{ env.APP_NAME }}/data.json" -o "src/data/blog.json"
-        
+        #mkdir -p src/data
+        #curl -fsSL --retry 5 --retry-delay 3 "http://serwer38987.lh.pl/upload/${{ env.APP_NAME }}/data.json" -o "src/data/blog.json"
+        mkdir -p src/data && curl -fsSL --retry 5 --retry-delay 3 -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" "http://serwer38987.lh.pl/upload/${{ env.APP_NAME }}/data.json" -o "src/data/blog.json"
         echo "=== Sprawdzam, czy plik został poprawnie zapisany ==="
         ls -la src/data/
 
