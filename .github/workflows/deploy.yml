@@ -43,7 +43,7 @@ jobs:
     - name: Download Remote Data JSON
       run: |
         mkdir -p src/data
-        curl -fL "http://serwer38987.lh.pl/upload/${{ env.APP_NAME }}/data.json" -o "src/data/blog.json"
+        curl -fsSL --retry 5 --retry-delay 3 "http://serwer38987.lh.pl/upload/${{ env.APP_NAME }}/data.json" -o "src/data/blog.json"
         
         echo "=== Sprawdzam, czy plik został poprawnie zapisany ==="
         ls -la src/data/
