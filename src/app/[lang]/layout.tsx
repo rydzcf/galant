@@ -9,6 +9,15 @@ const manrope = Manrope({ subsets: ["latin", "latin-ext"] });
 export const metadata: Metadata = {
   title: "lek. Adam Galant - Medycyna Personalizowana",
   description: "Terapia Hormonalna Zastępcza - TRT",
+  // Ustawienie nazwy aplikacji dla urządzeń Apple (Twój meta tag)
+  appleWebApp: {
+    title: "medycynapersonalna",
+  },
+  // Opcjonalnie: ręczna konfiguracja ścieżek do ikon, jeśli nie używasz automatycznych plików w app/
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/apple-icon.png", // jeśli posiadasz osobną ikonę dla iOS
+  },
 };
 
 export async function generateStaticParams() {
