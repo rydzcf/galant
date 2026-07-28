@@ -394,11 +394,11 @@ export default async function Home(props: PageProps) {
                   {lang === 'pl' ? "Pon: 10:00 - 18:00" : "Mon: 10:00 - 18:00"}
                 </span>
               </div>
-              <div className="flex items-center gap-4 text-xl opacity-90">
-                 <GalantLogo className="w-8 h-8" />
+              <div className="flex flex-col items-center gap-4 text-xl opacity-90">
                  <span>
                     {lang === 'pl' ? "Gabinet Medycyny Personalnej" : "Personalized Medicine Clinic"}
                  </span>
+                 <GalantLogo className="w-auto h-12 aspect-[408/118]" />
               </div>
             </div>
 
