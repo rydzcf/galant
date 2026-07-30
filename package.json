@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-   "predev": "curl -fL \"http://serwer38987.lh.pl/upload/medycynapersonalna.pl/data.json\" -o \"src/data/blog.tmp.json\" && mv \"src/data/blog.tmp.json\" \"src/data/blog.json\"",
+    "predev": "curl -fL \"http://serwer38987.lh.pl/upload/medycynapersonalna.pl/data.json\" -o \"src/data/blog.tmp.json\" && mv \"src/data/blog.tmp.json\" \"src/data/blog.json\"",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.3.0",
+    "@next/third-parties": "^16.2.12",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "firebase": "^12.15.0",

@@ -3,6 +3,7 @@ import { Manrope } from "next/font/google";
 import "@/app/globals.css";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 const manrope = Manrope({ subsets: ["latin", "latin-ext"] });
 
@@ -43,6 +44,7 @@ export default async function RootLayout({
         </main>
         <Footer lang={lang} />
       </body>
+      <GoogleAnalytics gaId="G-9D1VBT4ZVH" />
     </html>
   );
 }
