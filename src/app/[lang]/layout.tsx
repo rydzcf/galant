@@ -7,19 +7,38 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 
 const manrope = Manrope({ subsets: ["latin", "latin-ext"] });
 
-export const metadata: Metadata = {
-  title: "lek. Adam Galant - Medycyna Personalizowana",
-  description: "Terapia Hormonalna Zastępcza - TRT",
-  // Ustawienie nazwy aplikacji dla urządzeń Apple (Twój meta tag)
-  appleWebApp: {
-    title: "medycynapersonalna",
-  },
-  // Opcjonalnie: ręczna konfiguracja ścieżek do ikon, jeśli nie używasz automatycznych plików w app/
-  icons: {
-    icon: "/favicon.ico",
-    apple: "/apple-icon.png", // jeśli posiadasz osobną ikonę dla iOS
-  },
+// Podmień na domyślny adres swojej witryny
+const BASE_URL = "https://medycynapersonalna.pl";
+
+type Props = {
+  children: React.ReactNode;
+  params: Promise<{ lang: string }>;
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { lang } = await params;
+
+  return {
+    metadataBase: new URL(BASE_URL),
+    title: "lek. Adam Galant - Medycyna Personalizowana",
+    description: "Terapia Hormonalna Zastępcza - TRT",
+    appleWebApp: {
+      title: "medycynapersonalna",
+    },
+    icons: {
+      icon: "/favicon.ico",
+      apple: "/apple-icon.png",
+    },
+    alternates: {
+      canonical: `/${lang}`,
+      languages: {
+        pl: "/pl",
+        en: "/en",
+        "x-default": "/pl",
+      },
+    },
+  };
+}
 
 export async function generateStaticParams() {
   return [{ lang: "pl" }, { lang: "en" }];
@@ -28,10 +47,7 @@ export async function generateStaticParams() {
 export default async function RootLayout({
   children,
   params,
-}: {
-  children: React.ReactNode;
-  params: Promise<{ lang: string }>;
-}) {
+}: Props) {
   const resolvedParams = await params;
   const lang = resolvedParams.lang as 'pl' | 'en';
 
