@@ -49,20 +49,20 @@ export default async function Home(props: PageProps) {
   const messages = lang === 'pl' ? messagesPl : messagesEn;
 
   // Read local blog data
-// Read local blog data
+  // Read local blog data
   const blogDataPath = path.join(process.cwd(), 'src/data/blog.json');
   const blogData = JSON.parse(fs.readFileSync(blogDataPath, 'utf8'));
-  
+
   // Bezpieczna obsługa: jeśli blogData to tablica, weź ją bezpośrednio. 
   // Jeśli to obiekt, poszukaj klucza .posts. Jeśli nie ma niczego - daj pustą tablicę.
-  const posts = Array.isArray(blogData) 
-    ? blogData 
+  const posts = Array.isArray(blogData)
+    ? blogData
     : (blogData?.posts || []);
 
   // const posts = await getBlogPosts();
 
   return (
-     <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center">
       {/* Hero Section */}
       <section className="w-full min-h-[100dvh] flex flex-col pt-24 md:pt-32 pb-0 bg-background overflow-hidden relative">
         <div className="container mx-auto px-4 z-10 w-full flex-1 flex flex-col justify-center md:justify-start md:flex-row items-stretch">
@@ -231,27 +231,27 @@ export default async function Home(props: PageProps) {
                           `,
                         }}
                       />
-<button
-    className="btn-mydr-pp"
-    data-doctor=""
-    data-speciality=""
-    data-visitkind=""
-    data-evisit="true"
-    data-appname="drw"
-    data-token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNpbGl0eV9pZCI6MjgyMjl9.c4nMlv1icprdH8vb6zYd9ZQbvzNtFE7FG-jYaXcuuow"
->
-</button>
+                      <button
+                        className="btn-mydr-pp"
+                        data-doctor=""
+                        data-speciality=""
+                        data-visitkind=""
+                        data-evisit="true"
+                        data-appname="drw"
+                        data-token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmYWNpbGl0eV9pZCI6MjgyMjl9.RYeHA1c6eqsORj5NyfVtQ5XlhQh23trYcBVTpZZjcM0"
+                      >
+                      </button>
                     </>
                   )}
                 </div>
                 <div className="relative w-full md:w-1/2 min-h-[280px] md:min-h-[380px] mx-auto">
-  <Image
-    src="/images/approach.png"
-    alt={messages.offer.approachTitle}
-    fill
-    className="object-cover object-center"
-  />
-</div>
+                  <Image
+                    src="/images/approach.png"
+                    alt={messages.offer.approachTitle}
+                    fill
+                    className="object-cover object-center"
+                  />
+                </div>
               </div>
             </div>
           </Reveal>
@@ -271,11 +271,10 @@ export default async function Home(props: PageProps) {
               return (
                 <Reveal key={item.title} delay={0.1 + (index % 3) * 0.15}>
                   <div
-                    className={`card h-full flex flex-col rounded-3xl p-8 shadow-xl border transition-transform md:hover:scale-105 ${
-                      isFeatured
+                    className={`card h-full flex flex-col rounded-3xl p-8 shadow-xl border transition-transform md:hover:scale-105 ${isFeatured
                         ? "bg-primary text-primary-foreground border-primary"
                         : "bg-secondary/30 border-border/50"
-                    }`}
+                      }`}
                   >
                     {item.badge && (
                       <span className="inline-block self-start bg-background text-primary text-xs font-bold uppercase tracking-wide px-3 py-1 rounded-full mb-4">
@@ -296,7 +295,7 @@ export default async function Home(props: PageProps) {
       </section>
 
       {/* Blog Section */}
-     <section id="blog" className="w-full py-32 bg-background">
+      <section id="blog" className="w-full py-32 bg-background">
         <div className="container mx-auto px-4">
           <Reveal>
             <h2 className="text-4xl md:text-5xl font-bold mb-16">{messages.nav.blog}</h2>
@@ -310,7 +309,7 @@ export default async function Home(props: PageProps) {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {posts.map((post: BlogPost, index: number) => {
                 const localeData = post.locales[lang];
-                if(!localeData) {
+                if (!localeData) {
                   return null
                 }
                 return (
@@ -346,7 +345,7 @@ export default async function Home(props: PageProps) {
                 ? "Umów się na konsultację i odzyskaj pełnię witalności. Zrób pierwszy krok w stronę lepszego zdrowia."
                 : "Schedule a consultation and regain full vitality. Take the first step towards better health."}
             </p>
-           
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-2xl mx-auto">
               <a
                 href="tel:+48502759517"
@@ -365,8 +364,8 @@ export default async function Home(props: PageProps) {
                 className="flex flex-1 items-center justify-center gap-3 border-2 border-black text-black hover:bg-black/5 px-6 py-4 rounded-full font-bold text-base transition-transform md:hover:scale-105 active:scale-95 shadow-xl"
               >
                 <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-  <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
-</svg>
+                  <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+                </svg>
                 E-mail
               </a>
 
@@ -395,10 +394,10 @@ export default async function Home(props: PageProps) {
                 </span>
               </div>
               <div className="flex flex-col items-center gap-4 text-xl opacity-90">
-                 <span>
-                    {lang === 'pl' ? "Gabinet Medycyny Personalnej" : "Personalized Medicine Clinic"}
-                 </span>
-                 <GalantLogo className="w-auto h-12 aspect-[408/118]" />
+                <span>
+                  {lang === 'pl' ? "Gabinet Medycyny Personalnej" : "Personalized Medicine Clinic"}
+                </span>
+                <GalantLogo className="w-auto h-12 aspect-[408/118]" />
               </div>
             </div>
 
